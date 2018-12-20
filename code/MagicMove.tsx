@@ -316,8 +316,6 @@ export class MagicMove extends React.Component<Props> {
     const { children, target } = this.props
     const { elements } = this
 
-    console.log(children)
-
     if (React.Children.count(children) && React.Children.count(target)) {
       this.clone(children[0], false, true)
       this.clone(target[0], false, true)
