@@ -1,8 +1,8 @@
-.cache
 .backups
+.cache
 .npmrc
-node_modules
 *.framerxproj
 build
-yarn.lock
 dist
+node_modules
+yarn.lock
