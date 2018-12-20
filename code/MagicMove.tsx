@@ -18,6 +18,14 @@ interface Props {
 }
 
 export class MagicMove extends React.Component<Props> {
+  magicList = []
+  elements = {}
+  childrenCount = 0
+
+  state = {
+    foundIDs: [],
+  }
+
   static defaultProps = {
     width: 250,
     height: 250,
@@ -116,14 +124,6 @@ export class MagicMove extends React.Component<Props> {
       },
     },
   }
-
-  state = {
-    foundIDs: [],
-  }
-
-  magicList = []
-  elements = {}
-  i = 0
 
   runMagic = () => {
     this.magicList.forEach(exec => {
@@ -224,7 +224,7 @@ export class MagicMove extends React.Component<Props> {
 
   handleProps = (element, render, isParent, parentSize, stopPropagation) => {
     const props = {}
-    const { elements, i } = this
+    const { elements, childrenCount: i } = this
 
     if (!isParent && !render) {
       if (elements[i] == null) elements[i] = []
@@ -281,9 +281,9 @@ export class MagicMove extends React.Component<Props> {
     stopPropagation = false,
   ) => {
     if (isParent) {
-      this.i = 0
+      this.childrenCount = 0
     }
-    this.i++
+    this.childrenCount++
     if (element.type.name == 'Unwrap') {
       stopPropagation = true
     }
