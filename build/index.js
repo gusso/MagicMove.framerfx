@@ -148,7 +148,7 @@ eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nconst 
 Object.defineProperty(exports, "__esModule", { value: true });
 // WARNING: this file is auto generated, any changes will be lost
 const framer_1 = __webpack_require__(/*! framer */ "framer");
-const canvas = framer_1.CanvasStore.shared(); // CANVAS_DATA;
+const canvas = framer_1.CanvasStore.shared({"children":[]});
 
 
 /***/ }),
