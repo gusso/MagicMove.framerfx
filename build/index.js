@@ -148,7 +148,9 @@ eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nconst 
 Object.defineProperty(exports, "__esModule", { value: true });
 // WARNING: this file is auto generated, any changes will be lost
 const framer_1 = __webpack_require__(/*! framer */ "framer");
-const canvas = framer_1.CanvasStore.shared({"children":[]});
+const canvas = framer_1.CanvasStore.shared({"children":[{"componentClass":"Frame","props":{"key":"ihFuIM9Ce","id":"id_ihFuIM9Ce","willChangeTransform":false,"opacity":1,"radius":0,"rotation":0,"visible":true,"overflow":"hidden","background":{"r":255,"g":255,"b":255,"a":1,"h":0,"s":0,"l":1,"initialValue":"white","roundA":1,"format":"rgb"},"shadows":[],"left":0,"right":0,"top":0,"bottom":0,"width":188,"height":297,"aspectRatio":null,"centerX":"0%","centerY":"0%","parentSize":null},"children":[{"componentClass":"Frame","props":{"key":"KPPh7kmm1","id":"id_KPPh7kmm1","willChangeTransform":false,"opacity":1,"radius":0,"rotation":0,"visible":true,"overflow":"visible","background":{"r":0,"g":153,"b":255,"a":0.5,"h":204,"s":1,"l":0.5,"initialValue":"rgba(0, 153, 255, 0.5)","roundA":0.5,"format":"rgb"},"shadows":[],"left":44,"right":null,"top":58,"bottom":null,"width":70,"height":50,"aspectRatio":null,"centerX":"42.02127659574468%","centerY":"27.946127946127948%","parentSize":null},"children":[],"name":null},{"componentClass":"Frame","props":{"key":"mNu_Xe3Iy","id":"id_mNu_Xe3Iy","willChangeTransform":false,"opacity":1,"radius":0,"rotation":0,"visible":true,"overflow":"visible","background":{"r":0,"g":153,"b":255,"a":0.5,"h":204,"s":1,"l":0.5,"initialValue":"rgba(0, 153, 255, 0.5)","roundA":0.5,"format":"rgb"},"shadows":[],"left":44,"right":null,"top":null,"bottom":81,"width":80,"height":50,"aspectRatio":null,"centerX":"44.680851063829785%","centerY":"64.3097643097643%","parentSize":null},"children":[],"name":null}],"name":null}]});
+exports.Component = framer_1.createDesignComponent(canvas, "id_ihFuIM9Ce", {}, 188, 297);
+exports.__info__ = [];
 
 
 /***/ }),

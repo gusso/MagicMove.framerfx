@@ -2,3 +2,7 @@
 .backups
 .npmrc
 node_modules
+*.framerxproj
+build
+yarn.lock
+dist
