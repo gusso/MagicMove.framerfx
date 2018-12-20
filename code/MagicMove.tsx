@@ -4,10 +4,12 @@ import { PropertyControls, ControlType, Animatable, animate } from 'framer'
 interface Props {
   width: number
   height: number
+
+  children: React.ReactChild
+  target: React.ReactChild
+
   animate: string
   delay: number
-  target: React.ReactChild
-  source: React.ReactChild
   easing: string
   tension: number
   friction: number
@@ -314,7 +316,9 @@ export class MagicMove extends React.Component<Props> {
     const { children, target } = this.props
     const { elements } = this
 
-    if (children.length && target.length) {
+    console.log(children)
+
+    if (React.Children.count(children) && React.Children.count(target)) {
       this.clone(children[0], false, true)
       this.clone(target[0], false, true)
 
@@ -399,6 +403,7 @@ const messageBoxStyle: React.CSSProperties = {
   background: 'rgba(136, 85, 255, 0.1)',
   boxShadow: 'inset 0 0 0 1px rgba(137, 87, 255, 0.5)',
 }
+
 const numberStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
@@ -413,6 +418,7 @@ const numberStyle: React.CSSProperties = {
   background: '#8855FF',
   color: 'white',
 }
+
 const numberStyleOff: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
@@ -427,16 +433,11 @@ const numberStyleOff: React.CSSProperties = {
   background: 'rgba(135, 85, 255, .3)',
   color: 'white',
 }
+
 const textStyle: React.CSSProperties = {
   fontSize: 16,
   lineHeight: 1.3,
   color: '#8855FF',
   marginTop: 10,
   textAlign: 'center',
-}
-const subTextStyle: React.CSSProperties = {
-  display: 'block',
-  fontSize: 11,
-  fontWeight: 500,
-  opacity: 0.8,
 }
