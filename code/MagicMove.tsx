@@ -222,7 +222,7 @@ export class MagicMove extends React.Component<Props> {
     return returnConstraints
   }
 
-  handleProps = (element, render, isParent, parentSize, stopPropagation) => {
+  handleProps = (element, render, isParent, parentSize, stop) => {
     const props = {}
     const { elements, childrenCount: i } = this
 
@@ -253,7 +253,7 @@ export class MagicMove extends React.Component<Props> {
             }
           })
 
-          if (!found.length && !stopPropagation) {
+          if (!found.length && !stop) {
             props['bottom'] = null
             props['right'] = null
 
@@ -278,36 +278,24 @@ export class MagicMove extends React.Component<Props> {
     render = false,
     isParent = false,
     parentSize = null,
-    stopPropagation = false,
+    stop = false,
   ) => {
     if (isParent) {
       this.childrenCount = 0
     }
     this.childrenCount++
     if (element.type.name == 'Unwrap') {
-      stopPropagation = true
+      stop = true
     }
     return React.cloneElement(
       element,
-      this.handleProps(
-        element,
-        render,
-        isParent,
-        parentSize,
-        stopPropagation,
-      ),
+      this.handleProps(element, render, isParent, parentSize, stop),
       React.Children.map(element.props.children, child => {
         const { width, height } =
           element.type.name == 'Unwrap'
             ? parentSize
             : this.getSize({ ...element.props, parentSize })
-        return this.clone(
-          child,
-          render,
-          false,
-          { width, height },
-          stopPropagation,
-        )
+        return this.clone(child, render, false, { width, height }, stop)
       }),
     )
   }
