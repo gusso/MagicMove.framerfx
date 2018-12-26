@@ -19,11 +19,10 @@ interface Props {
 
 export class MagicMove extends React.Component<Props> {
   magicList = []
-  elements = {}
   childIndex = 0
 
   state = {
-    foundIDs: {},
+    elements: {},
   }
 
   static defaultProps = {
@@ -231,15 +230,15 @@ export class MagicMove extends React.Component<Props> {
     origin,
   }) => {
     const props = {}
-    const { elements, childIndex } = this
-
-    // console.log(this.state.foundIDs)
+    const elements = this.state.elements
+    const { childIndex } = this
 
     if (!render) {
-      if (elements[childIndex] == null) elements[childIndex] = {}
+      if (!elements[childIndex]) elements[childIndex] = {}
       elements[childIndex][origin] = { ...element.props, parentSize }
+      this.setState({ elements })
     } else {
-      const propsTransform = Object.values(this.state.foundIDs).find(e => {
+      const propsTransform = (Object as any).values(elements).find(e => {
         return e.start.id == element.props.id
       })
 
@@ -330,7 +329,6 @@ export class MagicMove extends React.Component<Props> {
 
   processProps = () => {
     const { children, target } = this.props
-    const { elements } = this
 
     if (React.Children.count(children) && React.Children.count(target)) {
       this.clone({
@@ -339,10 +337,6 @@ export class MagicMove extends React.Component<Props> {
         origin: 'start',
       })
       this.clone({ element: target[0], isParent: true, origin: 'end' })
-
-      this.setState({
-        foundIDs: elements,
-      })
     }
   }
 
