@@ -18,7 +18,7 @@ interface Props {
 }
 
 export class MagicMove extends React.Component<Props> {
-  magicList = []
+  animationList = []
   childIndex = 0
 
   state = {
@@ -124,32 +124,24 @@ export class MagicMove extends React.Component<Props> {
     },
   }
 
-  runAnimations = () => {
-    this.magicList.forEach(exec => {
-      exec()
-    })
-  }
-
   createAnimation = (start, end) => {
     const { props } = this
     const options = {}
-
     const animated = Animatable(start)
 
     if (props.easing == 'spring') {
       options['tension'] = props.tension
       options['friction'] = props.friction
-    } else {
-      options['duration'] = props.duration
-    }
+    } else options['duration'] = props.duration
 
-    if (props.easing == 'bezier')
-      options['curve'] = JSON.parse(`[${props.curve}]`)
+    if (props.easing == 'bezier') options['curve'] = JSON.parse(`[${props.curve}]`)
 
-    this.magicList.push(() => animate[props.easing](animated, end, options))
+    this.animationList.push(() => animate[props.easing](animated, end, options))
 
     return animated
   }
+
+  runAnimations = () => this.animationList.forEach(animation => animation())
 
   cleanSide = (props, side, parentSize) => {
     if (typeof props[side] == 'string') {
@@ -158,6 +150,7 @@ export class MagicMove extends React.Component<Props> {
 
       return (parseFloat(props[side]) / 100) * parentSize[side]
     }
+
     return props[side]
   }
 
@@ -174,11 +167,10 @@ export class MagicMove extends React.Component<Props> {
       height: null,
     }
 
-    for (const side in size) {
+    for (const side in size)
       returnSize[side] = size[side].every(i => i != null)
         ? parentSize[side] - size[side][0] - size[side][1]
         : this.cleanSide(props, side, parentSize)
-    }
 
     return returnSize
   }
@@ -215,14 +207,7 @@ export class MagicMove extends React.Component<Props> {
     return returnConstraints
   }
 
-  handleProps = ({
-    element,
-    render,
-    isParent,
-    parentSize,
-    stop,
-    origin,
-  }) => {
+  handleProps = ({ element, render, isParent, parentSize, stop, origin }) => {
     const props = {}
     const elements = this.state.elements
     const { childIndex } = this
@@ -240,7 +225,7 @@ export class MagicMove extends React.Component<Props> {
         const { start, end } = propsTransform
 
         if (element.type.name == 'WithEventsHOC') {
-          const { getConstraints, getSize, createAnimation: magic } = this
+          const { getConstraints, getSize, createAnimation } = this
 
           const constraints = [getConstraints(start), getConstraints(end)]
           const size = [getSize(start), getSize(end)]
@@ -251,19 +236,19 @@ export class MagicMove extends React.Component<Props> {
           })
 
           if (!found.length && !stop) {
-            props['background'] = magic(start.background, end.background)
-            props['opacity'] = magic(start.opacity, end.opacity)
-            props['rotation'] = magic(start.rotation, end.rotation)
+            props['background'] = createAnimation(start.background, end.background)
+            props['opacity'] = createAnimation(start.opacity, end.opacity)
+            props['rotation'] = createAnimation(start.rotation, end.rotation)
           }
 
           if (!isParent) {
             props['bottom'] = null
             props['right'] = null
 
-            props['top'] = magic(constraints[0].top, constraints[1].top)
-            props['left'] = magic(constraints[0].left, constraints[1].left)
-            props['width'] = magic(size[0].width, size[1].width)
-            props['height'] = magic(size[0].height, size[1].height)
+            props['top'] = createAnimation(constraints[0].top, constraints[1].top)
+            props['left'] = createAnimation(constraints[0].left, constraints[1].left)
+            props['width'] = createAnimation(size[0].width, size[1].width)
+            props['height'] = createAnimation(size[0].height, size[1].height)
           }
         }
       }
@@ -333,10 +318,7 @@ export class MagicMove extends React.Component<Props> {
 
     if (animate == 'auto') this.runAnimations()
 
-    if (animate == 'delay')
-      setTimeout(() => {
-        this.runAnimations()
-      }, delay * 1000)
+    if (animate == 'delay') setTimeout(() => this.runAnimations(), delay * 1000)
   }
 
   render() {
@@ -358,9 +340,7 @@ export class MagicMove extends React.Component<Props> {
             >
               Source
             </div>
-            <div style={target[0] ? numberStyleOff : numberStyle}>
-              Target
-            </div>
+            <div style={target[0] ? numberStyleOff : numberStyle}>Target</div>
           </div>
           <div style={textStyle}>Connect to source and target</div>
         </div>
