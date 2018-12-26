@@ -143,9 +143,8 @@ export class MagicMove extends React.Component<Props> {
       options['duration'] = props.duration
     }
 
-    if (props.easing == 'bezier') {
+    if (props.easing == 'bezier')
       options['curve'] = JSON.parse(`[${props.curve}]`)
-    }
 
     this.magicList.push(() => animate[props.easing](animated, end, options))
 
@@ -154,9 +153,9 @@ export class MagicMove extends React.Component<Props> {
 
   cleanSide = (props, side, parentSize) => {
     if (typeof props[side] == 'string') {
-      if (props[side].includes('fr')) {
+      if (props[side].includes('fr'))
         return parseFloat(props[side]) * parentSize[side]
-      }
+
       return (parseFloat(props[side]) / 100) * parentSize[side]
     }
     return props[side]
@@ -198,24 +197,19 @@ export class MagicMove extends React.Component<Props> {
       const oppositeSide = side == 'left' ? 'right' : 'bottom'
       const cleanSide = this.cleanSide(props, sizeSide, props.parentSize)
 
-      if (constraints.every(i => props[i] != null)) {
+      if (constraints.every(i => props[i] != null))
         returnConstraints[side] = props[side]
-      } else {
-        if (![side, oppositeSide].every(i => props[i] == null)) {
-          if (props[side] != null) {
-            returnConstraints[side] = props[side]
-          } else {
-            returnConstraints[side] =
-              props.parentSize[sizeSide] - props[oppositeSide] - cleanSide
-          }
-        } else {
+      else if (![side, oppositeSide].every(i => props[i] == null))
+        if (props[side] != null) returnConstraints[side] = props[side]
+        else
           returnConstraints[side] =
-            (props.parentSize[sizeSide] *
-              parseFloat(props['center' + orientation[side]])) /
-              100 -
-            cleanSide / 2
-        }
-      }
+            props.parentSize[sizeSide] - props[oppositeSide] - cleanSide
+      else
+        returnConstraints[side] =
+          (props.parentSize[sizeSide] *
+            parseFloat(props['center' + orientation[side]])) /
+            100 -
+          cleanSide / 2
     })
 
     return returnConstraints
@@ -252,11 +246,8 @@ export class MagicMove extends React.Component<Props> {
           const size = [getSize(start), getSize(end)]
 
           const found = Object.keys(start).filter(key => {
-            if (typeof start[key] == 'string' && start[key]) {
-              if (start[key].includes('fr')) {
-                return true
-              }
-            }
+            if (typeof start[key] == 'string' && start[key])
+              if (start[key].includes('fr')) return true
           })
 
           if (!found.length && !stop) {
@@ -289,14 +280,9 @@ export class MagicMove extends React.Component<Props> {
     parentSize = null,
     origin = null,
   }) => {
-    if (isParent) {
-      this.childIndex = 0
-    }
+    if (element.type.name == 'Unwrap') stop = true
+    if (isParent) this.childIndex = 0
     this.childIndex++
-
-    if (element.type.name == 'Unwrap') {
-      stop = true
-    }
 
     return React.cloneElement(
       element,
@@ -311,10 +297,9 @@ export class MagicMove extends React.Component<Props> {
       }),
 
       React.Children.map(element.props.children, child => {
-        const { width, height } =
-          element.type.name == 'Unwrap'
-            ? parentSize
-            : this.getSize({ ...element.props, parentSize })
+        const { width, height } = stop
+          ? parentSize
+          : this.getSize({ ...element.props, parentSize })
 
         return this.clone({
           element: child,
@@ -331,11 +316,7 @@ export class MagicMove extends React.Component<Props> {
     const { children, target } = this.props
 
     if (React.Children.count(children) && React.Children.count(target)) {
-      this.clone({
-        element: children[0],
-        isParent: true,
-        origin: 'start',
-      })
+      this.clone({ element: children[0], isParent: true, origin: 'start' })
       this.clone({ element: target[0], isParent: true, origin: 'end' })
     }
   }
@@ -347,19 +328,15 @@ export class MagicMove extends React.Component<Props> {
   componentDidUpdate(prevProps) {
     const { children, target, animate, delay } = this.props
 
-    if (children !== prevProps.children || target !== prevProps.target) {
+    if (children !== prevProps.children || target !== prevProps.target)
       this.processProps()
-    }
 
-    if (animate == 'auto') {
-      this.runAnimations()
-    }
+    if (animate == 'auto') this.runAnimations()
 
-    if (animate == 'delay') {
+    if (animate == 'delay')
       setTimeout(() => {
         this.runAnimations()
       }, delay * 1000)
-    }
   }
 
   render() {
