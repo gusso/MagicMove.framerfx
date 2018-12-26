@@ -20,10 +20,10 @@ interface Props {
 export class MagicMove extends React.Component<Props> {
   magicList = []
   elements = {}
-  childrenCount = 0
+  childIndex = 0
 
   state = {
-    foundIDs: [],
+    foundIDs: {},
   }
 
   static defaultProps = {
@@ -125,13 +125,13 @@ export class MagicMove extends React.Component<Props> {
     },
   }
 
-  runMagic = () => {
+  runAnimations = () => {
     this.magicList.forEach(exec => {
       exec()
     })
   }
 
-  magic = (start, end) => {
+  createAnimation = (start, end) => {
     const { props } = this
     const options = {}
 
@@ -222,17 +222,24 @@ export class MagicMove extends React.Component<Props> {
     return returnConstraints
   }
 
-  handleProps = (element, render, isParent, parentSize, stop) => {
+  handleProps = ({
+    element,
+    render,
+    isParent,
+    parentSize,
+    stop,
+    origin,
+  }) => {
     const props = {}
-    const { elements, childrenCount: i } = this
+    const { elements, childIndex } = this
+
+    // console.log(this.state.foundIDs)
 
     if (!render) {
-      if (elements[i] == null) elements[i] = []
-      elements[i] = [...elements[i], { ...element.props, parentSize }]
-    }
-
-    if (render) {
-      const propsTransform = this.state.foundIDs.find(e => {
+      if (elements[childIndex] == null) elements[childIndex] = {}
+      elements[childIndex][origin] = { ...element.props, parentSize }
+    } else {
+      const propsTransform = Object.values(this.state.foundIDs).find(e => {
         return e.start.id == element.props.id
       })
 
@@ -240,7 +247,7 @@ export class MagicMove extends React.Component<Props> {
         const { start, end } = propsTransform
 
         if (element.type.name == 'WithEventsHOC') {
-          const { getConstraints, getSize, magic } = this
+          const { getConstraints, getSize, createAnimation: magic } = this
 
           const constraints = [getConstraints(start), getConstraints(end)]
           const size = [getSize(start), getSize(end)]
@@ -275,29 +282,48 @@ export class MagicMove extends React.Component<Props> {
     return props
   }
 
-  clone = (
+  clone = ({
     element,
     render = false,
     isParent = false,
-    parentSize = null,
     stop = false,
-  ) => {
+    parentSize = null,
+    origin = null,
+  }) => {
     if (isParent) {
-      this.childrenCount = 0
+      this.childIndex = 0
     }
-    this.childrenCount++
+    this.childIndex++
+
     if (element.type.name == 'Unwrap') {
       stop = true
     }
+
     return React.cloneElement(
       element,
-      this.handleProps(element, render, isParent, parentSize, stop),
+
+      this.handleProps({
+        element,
+        render,
+        isParent,
+        stop,
+        parentSize,
+        origin,
+      }),
+
       React.Children.map(element.props.children, child => {
         const { width, height } =
           element.type.name == 'Unwrap'
             ? parentSize
             : this.getSize({ ...element.props, parentSize })
-        return this.clone(child, render, false, { width, height }, stop)
+
+        return this.clone({
+          element: child,
+          render,
+          stop,
+          parentSize: { width, height },
+          origin,
+        })
       }),
     )
   }
@@ -307,20 +333,15 @@ export class MagicMove extends React.Component<Props> {
     const { elements } = this
 
     if (React.Children.count(children) && React.Children.count(target)) {
-      this.clone(children[0], false, true)
-      this.clone(target[0], false, true)
-
-      const foundElements = []
-
-      Object.keys(elements).forEach(key => {
-        foundElements.push({
-          start: elements[key][0],
-          end: elements[key][1],
-        })
+      this.clone({
+        element: children[0],
+        isParent: true,
+        origin: 'start',
       })
+      this.clone({ element: target[0], isParent: true, origin: 'end' })
 
       this.setState({
-        foundIDs: [...this.state.foundIDs, ...foundElements],
+        foundIDs: elements,
       })
     }
   }
@@ -337,12 +358,12 @@ export class MagicMove extends React.Component<Props> {
     }
 
     if (animate == 'auto') {
-      this.runMagic()
+      this.runAnimations()
     }
 
     if (animate == 'delay') {
       setTimeout(() => {
-        this.runMagic()
+        this.runAnimations()
       }, delay * 1000)
     }
   }
@@ -351,8 +372,8 @@ export class MagicMove extends React.Component<Props> {
     const { width, height, children, target, animate } = this.props
 
     return children[0] && target[0] ? (
-      <div onClick={animate == 'onTap' ? this.runMagic : undefined}>
-        {this.clone(children[0], true, true)}
+      <div onClick={animate == 'onTap' ? this.runAnimations : undefined}>
+        {this.clone({ element: children[0], render: true, isParent: true })}
       </div>
     ) : (
       <div style={{ width: width, height: height }}>
