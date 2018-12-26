@@ -282,9 +282,10 @@ export class MagicMove extends React.Component<Props> {
       }),
 
       React.Children.map(element.props.children, child => {
-        const { width, height } = stop
-          ? parentSize
-          : this.getSize({ ...element.props, parentSize })
+        const { width, height } =
+          element.type.name == 'Unwrap'
+            ? parentSize
+            : this.getSize({ ...element.props, parentSize })
 
         return this.clone({
           element: child,
