@@ -226,7 +226,7 @@ export class MagicMove extends React.Component<Props> {
     const props = {}
     const { elements, childrenCount: i } = this
 
-    if (!isParent && !render) {
+    if (!render) {
       if (elements[i] == null) elements[i] = []
       elements[i] = [...elements[i], { ...element.props, parentSize }]
     }
@@ -254,6 +254,12 @@ export class MagicMove extends React.Component<Props> {
           })
 
           if (!found.length && !stop) {
+            props['background'] = magic(start.background, end.background)
+            props['opacity'] = magic(start.opacity, end.opacity)
+            props['rotation'] = magic(start.rotation, end.rotation)
+          }
+
+          if (!isParent) {
             props['bottom'] = null
             props['right'] = null
 
@@ -261,10 +267,6 @@ export class MagicMove extends React.Component<Props> {
             props['left'] = magic(constraints[0].left, constraints[1].left)
             props['width'] = magic(size[0].width, size[1].width)
             props['height'] = magic(size[0].height, size[1].height)
-
-            props['background'] = magic(start.background, end.background)
-            props['opacity'] = magic(start.opacity, end.opacity)
-            props['rotation'] = magic(start.rotation, end.rotation)
           }
         }
       }
