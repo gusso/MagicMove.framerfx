@@ -306,10 +306,6 @@ export class MagicMove extends React.Component<Props> {
     }
   }
 
-  componentDidMount() {
-    this.processProps()
-  }
-
   componentDidUpdate(prevProps) {
     const { children, target, animate, delay } = this.props
 
@@ -319,6 +315,10 @@ export class MagicMove extends React.Component<Props> {
     if (animate == 'auto') this.runAnimations()
 
     if (animate == 'delay') setTimeout(() => this.runAnimations(), delay * 1000)
+  }
+
+  componentDidMount() {
+    this.processProps()
   }
 
   render() {
