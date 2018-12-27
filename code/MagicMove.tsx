@@ -18,7 +18,7 @@ interface Props {
 }
 
 export class MagicMove extends React.Component<Props> {
-  animationList = []
+  animations = []
   childIndex = 0
 
   state = {
@@ -124,7 +124,7 @@ export class MagicMove extends React.Component<Props> {
     },
   }
 
-  createAnimation = (start, end) => {
+  buildAnimation = (start, end) => {
     const { props } = this
     const options = {}
     const animated = Animatable(start)
@@ -136,12 +136,12 @@ export class MagicMove extends React.Component<Props> {
 
     if (props.easing == 'bezier') options['curve'] = JSON.parse(`[${props.curve}]`)
 
-    this.animationList.push(() => animate[props.easing](animated, end, options))
+    this.animations.push(() => animate[props.easing](animated, end, options))
 
     return animated
   }
 
-  runAnimations = () => this.animationList.forEach(animation => animation())
+  runAnimations = () => this.animations.forEach(animation => animation())
 
   cleanSide = (props, side, parentSize) => {
     if (typeof props[side] == 'string') {
@@ -225,7 +225,7 @@ export class MagicMove extends React.Component<Props> {
         const { start, end } = propsTransform
 
         if (element.type.name == 'WithEventsHOC') {
-          const { getConstraints, getSize, createAnimation } = this
+          const { getConstraints, getSize, buildAnimation } = this
 
           const constraints = [getConstraints(start), getConstraints(end)]
           const size = [getSize(start), getSize(end)]
@@ -236,19 +236,19 @@ export class MagicMove extends React.Component<Props> {
           })
 
           if (!found.length && !stop) {
-            props['background'] = createAnimation(start.background, end.background)
-            props['opacity'] = createAnimation(start.opacity, end.opacity)
-            props['rotation'] = createAnimation(start.rotation, end.rotation)
+            props['background'] = buildAnimation(start.background, end.background)
+            props['opacity'] = buildAnimation(start.opacity, end.opacity)
+            props['rotation'] = buildAnimation(start.rotation, end.rotation)
           }
 
           if (!isParent) {
             props['bottom'] = null
             props['right'] = null
 
-            props['top'] = createAnimation(constraints[0].top, constraints[1].top)
-            props['left'] = createAnimation(constraints[0].left, constraints[1].left)
-            props['width'] = createAnimation(size[0].width, size[1].width)
-            props['height'] = createAnimation(size[0].height, size[1].height)
+            props['top'] = buildAnimation(constraints[0].top, constraints[1].top)
+            props['left'] = buildAnimation(constraints[0].left, constraints[1].left)
+            props['width'] = buildAnimation(size[0].width, size[1].width)
+            props['height'] = buildAnimation(size[0].height, size[1].height)
           }
         }
       }
