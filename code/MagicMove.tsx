@@ -1,12 +1,23 @@
 import * as React from 'react'
-import { PropertyControls, ControlType, Animatable, animate } from 'framer'
+import {
+  PropertyControls,
+  ControlType,
+  Animatable,
+  animate,
+  Frame,
+} from 'framer'
 
 interface Props {
   width: number
   height: number
 
   children: React.ReactChild
-  target: React.ReactChild
+
+  onTap: React.ReactChild
+  onTapStart: React.ReactChild
+  onTapEnd: React.ReactChild
+  onMouseEnter: React.ReactChild
+  onMouseLeave: React.ReactChild
 
   animate: string
   delay: number
@@ -17,8 +28,24 @@ interface Props {
   curve: string
 }
 
+const events = {
+  // { onTap: 'Tap' },
+  onTapStart: 'Tap Start',
+  onTapEnd: 'Tap End',
+  // { onMouseEnter: 'Hover' },
+  // { onMouseLeave: 'Leave' },
+}
+
+const eventProps = value => {
+  return Object.keys(events).reduce(
+    (object, key) => ({ ...object, [key]: value }),
+    {},
+  )
+}
+
 export class MagicMove extends React.Component<Props> {
-  animations = []
+  animations = eventProps([])
+
   childIndex = 0
 
   state = {
@@ -28,8 +55,8 @@ export class MagicMove extends React.Component<Props> {
   static defaultProps = {
     width: 250,
     height: 250,
-    animate: 'onTap',
-    delay: 1,
+    animate: 'events',
+    delay: 0,
     easing: 'spring',
     tension: 550,
     friction: 25,
@@ -40,19 +67,14 @@ export class MagicMove extends React.Component<Props> {
   static propertyControls: PropertyControls = {
     children: {
       type: ControlType.ComponentInstance,
-      title: 'Source',
-    },
-
-    target: {
-      type: ControlType.ComponentInstance,
-      title: 'Target',
+      title: 'Initial',
     },
 
     animate: {
       type: ControlType.SegmentedEnum,
       title: 'Animate',
-      options: ['auto', 'delay', 'onTap'],
-      optionTitles: ['Auto', 'Delay', 'onTap'],
+      options: ['events', 'auto'],
+      optionTitles: ['✦ Events', 'Auto'],
     },
 
     delay: {
@@ -61,9 +83,22 @@ export class MagicMove extends React.Component<Props> {
       max: 10,
       step: 0.1,
       hidden(props) {
-        return props.animate != 'delay'
+        return props.animate != 'auto'
       },
     },
+
+    ...Object.keys(events).reduce((object, key) => {
+      return {
+        ...object,
+        [key]: {
+          type: ControlType.ComponentInstance,
+          title: '✦' + events[key],
+          hidden(props) {
+            return props.animate != 'events'
+          },
+        },
+      }
+    }, {}),
 
     easing: {
       type: ControlType.Enum,
@@ -124,24 +159,34 @@ export class MagicMove extends React.Component<Props> {
     },
   }
 
-  buildAnimation = (start, end) => {
+  buildAnimation = (initial, onTapStart, onTapEnd) => {
     const { props } = this
     const options = {}
-    const animated = Animatable(start)
+    const animated = Animatable(initial)
 
     if (props.easing == 'spring') {
       options['tension'] = props.tension
       options['friction'] = props.friction
     } else options['duration'] = props.duration
 
-    if (props.easing == 'bezier') options['curve'] = JSON.parse(`[${props.curve}]`)
+    if (props.easing == 'bezier')
+      options['curve'] = JSON.parse(`[${props.curve}]`)
 
-    this.animations.push(() => animate[props.easing](animated, end, options))
+    this.animations.onTapStart = [
+      ...this.animations.onTapStart,
+      () => animate[props.easing](animated, onTapStart, options),
+    ]
+
+    this.animations.onTapEnd = [
+      ...this.animations.onTapEnd,
+      () => animate[props.easing](animated, onTapEnd, options),
+    ]
 
     return animated
   }
 
-  runAnimations = () => this.animations.forEach(animation => animation())
+  runAnimations = event =>
+    this.animations[event].forEach(animation => animation())
 
   cleanSide = (props, side, parentSize) => {
     if (typeof props[side] == 'string') {
@@ -218,37 +263,81 @@ export class MagicMove extends React.Component<Props> {
       this.setState({ elements })
     } else {
       const propsTransform = (Object as any).values(elements).find(e => {
-        return e.start.id == element.props.id
+        return e.initial.id == element.props.id
       })
 
       if (propsTransform) {
-        const { start, end } = propsTransform
+        const { initial, onTapStart, onTapEnd } = propsTransform
 
         if (element.type.name == 'WithEventsHOC') {
           const { getConstraints, getSize, buildAnimation } = this
 
-          const constraints = [getConstraints(start), getConstraints(end)]
-          const size = [getSize(start), getSize(end)]
+          const constraints = {
+            initial: getConstraints(initial),
+            // DEAL WITH THE FACT YOU NEED TO PASS FUNCTION WITH PARAM
+            // ...eventProps(getConstraints(propsTransform[key])),
+            ...Object.keys(events).reduce(
+              (object, key) => ({
+                ...object,
+                [key]: getConstraints(propsTransform[key]),
+              }),
+              {},
+            ),
+          }
 
-          const found = Object.keys(start).filter(key => {
-            if (typeof start[key] == 'string' && start[key])
-              if (start[key].includes('fr')) return true
+          const size = {
+            initial: getSize(initial),
+            onTapStart: getSize(onTapStart),
+            onTapEnd: getSize(onTapEnd),
+          }
+
+          const found = Object.keys(initial).filter(key => {
+            if (typeof initial[key] == 'string' && initial[key])
+              if (initial[key].includes('fr')) return true
           })
 
           if (!found.length && !stop) {
-            props['background'] = buildAnimation(start.background, end.background)
-            props['opacity'] = buildAnimation(start.opacity, end.opacity)
-            props['rotation'] = buildAnimation(start.rotation, end.rotation)
+            props['background'] = buildAnimation(
+              initial.background,
+              onTapStart.background,
+              onTapEnd.background,
+            )
+            props['opacity'] = buildAnimation(
+              initial.opacity,
+              onTapStart.opacity,
+              onTapEnd.opacity,
+            )
+            props['rotation'] = buildAnimation(
+              initial.rotation,
+              onTapStart.rotation,
+              onTapEnd.rotation,
+            )
           }
 
           if (!isParent) {
             props['bottom'] = null
             props['right'] = null
 
-            props['top'] = buildAnimation(constraints[0].top, constraints[1].top)
-            props['left'] = buildAnimation(constraints[0].left, constraints[1].left)
-            props['width'] = buildAnimation(size[0].width, size[1].width)
-            props['height'] = buildAnimation(size[0].height, size[1].height)
+            props['top'] = buildAnimation(
+              constraints.initial.top,
+              constraints.onTapStart.top,
+              constraints.onTapEnd.top,
+            )
+            props['left'] = buildAnimation(
+              constraints.initial.left,
+              constraints.onTapStart.left,
+              constraints.onTapEnd.left,
+            )
+            props['width'] = buildAnimation(
+              size.initial.width,
+              size.onTapStart.width,
+              size.onTapEnd.width,
+            )
+            props['height'] = buildAnimation(
+              size.initial.height,
+              size.onTapStart.height,
+              size.onTapEnd.height,
+            )
           }
         }
       }
@@ -299,23 +388,37 @@ export class MagicMove extends React.Component<Props> {
   }
 
   processProps = () => {
-    const { children, target } = this.props
+    const { props } = this
 
-    if (React.Children.count(children) && React.Children.count(target)) {
-      this.clone({ element: children[0], isParent: true, origin: 'start' })
-      this.clone({ element: target[0], isParent: true, origin: 'end' })
+    if (React.Children.count(props.children))
+      this.clone({
+        element: props.children[0],
+        isParent: true,
+        origin: 'initial',
+      })
+
+    for (let key in events) {
+      if (React.Children.count(this.props[key])) {
+        this.clone({
+          element: props[key][0],
+          isParent: true,
+          origin: key,
+        })
+      }
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { children, target, animate, delay } = this.props
+    const { animate, delay } = this.props
 
-    if (children !== prevProps.children || target !== prevProps.target)
-      this.processProps()
+    if (this.props !== prevProps) this.processProps()
 
-    if (animate == 'auto') this.runAnimations()
+    console.log(this.animations)
 
-    if (animate == 'delay') setTimeout(() => this.runAnimations(), delay * 1000)
+    // if (animate == 'auto') this.runAnimations('onTapStart')
+
+    // if (animate == 'delay')
+    //   setTimeout(() => this.runAnimations('onTapStart'), delay * 1000)
   }
 
   componentDidMount() {
@@ -323,12 +426,24 @@ export class MagicMove extends React.Component<Props> {
   }
 
   render() {
-    const { width, height, children, target, animate } = this.props
+    const { width, height, children } = this.props
+    let eventsSelected = {}
 
-    return children[0] && target[0] ? (
-      <div onClick={animate == 'onTap' ? this.runAnimations : undefined}>
-        {this.clone({ element: children[0], render: true, isParent: true })}
-      </div>
+    for (let key in events) {
+      if (React.Children.count(this.props[key])) {
+        eventsSelected[key] = () => this.runAnimations(key)
+      }
+    }
+
+    return React.Children.count(children) &&
+      Object.keys(eventsSelected).length ? (
+      <Frame {...eventsSelected}>
+        {this.clone({
+          element: children[0],
+          render: true,
+          isParent: true,
+        })}
+      </Frame>
     ) : (
       <div style={{ width: width, height: height }}>
         <div style={{ ...messageBoxStyle, width: width, height: height }}>
@@ -339,11 +454,11 @@ export class MagicMove extends React.Component<Props> {
                 marginRight: 15,
               }}
             >
-              Source
+              Initial
             </div>
-            <div style={target[0] ? numberStyleOff : numberStyle}>Target</div>
+            {/* <div style={target[0] ? numberStyleOff : numberStyle}>Target</div> */}
           </div>
-          <div style={textStyle}>Connect to source and target</div>
+          <div style={textStyle}>Connect to initial and target</div>
         </div>
       </div>
     )
