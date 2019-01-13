@@ -24,7 +24,7 @@ Any component inside a Stack will not animate, but you can press **`⌘+⌫`** t
 
 ## Version History
 
-**1.4.0**  
+**1.5.0**  
 Parent Frame properties are now animatable: `background`, `opacity`, `rotation`
 
 **1.0.0**  
