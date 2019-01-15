@@ -173,7 +173,7 @@ export class MagicMove extends React.Component<Props> {
       const key = Object.keys(element)[0]
 
       animations[key] = [
-        animations[key],
+        ...animations[key],
         () => animate[props.easing](animated, element[key], options),
       ]
     })
