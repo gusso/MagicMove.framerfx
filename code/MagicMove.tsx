@@ -13,6 +13,7 @@ interface Props {
 
   children: React.ReactChild
 
+  auto: React.ReactChild
   onTap: React.ReactChild
   onTapStart: React.ReactChild
   onTapEnd: React.ReactChild
@@ -32,20 +33,22 @@ const eventTitles = {
   onTap: 'Tap',
   onTapStart: 'Tap Start',
   onTapEnd: 'Tap End',
-  onMouseEnter: 'Hover',
-  onMouseLeave: 'Leave',
+  onMouseEnter: 'Mouse Over',
+  onMouseLeave: 'Mouse Leave',
 }
 
 const events = Object.keys(eventTitles)
 
-export class MagicMove extends React.Component<Props> {
-  animations = events.reduce((object, key) => ({ ...object, [key]: [] }), {})
+const hasChildren = children => React.Children.count(children)
 
+export class MagicMove extends React.Component<Props> {
   childIndex = 0
 
-  state = {
-    elements: {},
-  }
+  animations = events
+    .concat('auto')
+    .reduce((object, key) => ({ ...object, [key]: [] }), {})
+
+  state = { elements: {} }
 
   static defaultProps = {
     width: 250,
@@ -65,32 +68,21 @@ export class MagicMove extends React.Component<Props> {
       title: 'Initial',
     },
 
-    animate: {
-      type: ControlType.SegmentedEnum,
-      title: 'Animate',
-      options: ['events', 'auto'],
-      optionTitles: ['✦ Events', 'Auto'],
-    },
-
-    delay: {
-      type: ControlType.Number,
-      title: 'Delay',
-      max: 10,
-      step: 0.1,
-      hidden(props) {
-        return props.animate != 'auto'
-      },
+    auto: {
+      type: ControlType.Array,
+      propertyControl: { type: ControlType.ComponentInstance },
+      maxCount: 1,
+      title: '✦︎ Automatic',
     },
 
     ...events.reduce((object, key) => {
       return {
         ...object,
         [key]: {
-          type: ControlType.ComponentInstance,
+          type: ControlType.Array,
+          propertyControl: { type: ControlType.ComponentInstance },
+          maxCount: 1,
           title: '✦ ' + eventTitles[key],
-          hidden(props) {
-            return props.animate != 'events'
-          },
         },
       }
     }, {}),
@@ -152,10 +144,20 @@ export class MagicMove extends React.Component<Props> {
         return props.easing != 'bezier'
       },
     },
+
+    delay: {
+      type: ControlType.Number,
+      title: 'Delay',
+      max: 10,
+      step: 0.1,
+      hidden(props) {
+        return props.auto.length == 0
+      },
+    },
   }
 
   buildAnimation = (initial, ...events) => {
-    const { props } = this
+    const { props, animations } = this
     const options = {}
     const animated = Animatable(initial)
 
@@ -170,8 +172,8 @@ export class MagicMove extends React.Component<Props> {
     events.forEach(element => {
       const key = Object.keys(element)[0]
 
-      this.animations[key] = [
-        ...this.animations[key],
+      animations[key] = [
+        animations[key],
         () => animate[props.easing](animated, element[key], options),
       ]
     })
@@ -257,7 +259,7 @@ export class MagicMove extends React.Component<Props> {
       this.setState({ elements })
     } else {
       const propsTransform = (Object as any).values(elements).find(e => {
-        return e.initial.id == element.props.id
+        return e[Object.keys(e)[0]].id == element.props.id
       })
 
       if (propsTransform) {
@@ -304,12 +306,14 @@ export class MagicMove extends React.Component<Props> {
                 [key]: propsTransform[key].background,
               })),
             )
+
             props['opacity'] = buildAnimation(
               initial.opacity,
               ...events.map(key => ({
                 [key]: propsTransform[key].opacity,
               })),
             )
+
             props['rotation'] = buildAnimation(
               initial.rotation,
               ...events.map(key => ({
@@ -399,18 +403,18 @@ export class MagicMove extends React.Component<Props> {
   }
 
   processProps = () => {
-    const { props } = this
+    const { props, clone } = this
 
-    if (React.Children.count(props.children))
-      this.clone({
+    if (hasChildren(props.children))
+      clone({
         element: props.children[0],
         isParent: true,
         origin: 'initial',
       })
 
-    events.forEach(event => {
-      if (React.Children.count(this.props[event])) {
-        this.clone({
+    events.concat('auto').forEach(event => {
+      if (hasChildren(props[event])) {
+        clone({
           element: props[event][0],
           isParent: true,
           origin: event,
@@ -420,14 +424,13 @@ export class MagicMove extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps) {
-    const { animate, delay } = this.props
+    const { props } = this
 
-    if (this.props !== prevProps) this.processProps()
+    if (props !== prevProps) this.processProps()
 
-    // if (animate == 'auto') this.runAnimations('onTapStart')
-
-    // if (animate == 'delay')
-    //   setTimeout(() => this.runAnimations('onTapStart'), delay * 1000)
+    if (hasChildren(props.auto)) {
+      setTimeout(() => this.runAnimations('auto'), props.delay * 1000)
+    }
   }
 
   componentDidMount() {
@@ -435,23 +438,19 @@ export class MagicMove extends React.Component<Props> {
   }
 
   render() {
-    const { width, height, children } = this.props
+    const { width, height, children, auto } = this.props
     let eventsSelected = {}
 
     events.forEach(event => {
-      if (React.Children.count(this.props[event])) {
+      if (hasChildren(this.props[event])) {
         eventsSelected[event] = () => this.runAnimations(event)
       }
     })
 
-    return React.Children.count(children) &&
-      Object.keys(eventsSelected).length ? (
+    return hasChildren(children) &&
+      (Object.keys(eventsSelected).length || hasChildren(auto)) ? (
       <Frame background={null} {...eventsSelected}>
-        {this.clone({
-          element: children[0],
-          render: true,
-          isParent: true,
-        })}
+        {this.clone({ element: children[0], render: true, isParent: true })}
       </Frame>
     ) : (
       <div style={{ width: width, height: height }}>
