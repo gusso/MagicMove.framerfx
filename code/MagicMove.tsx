@@ -29,11 +29,11 @@ interface Props {
 }
 
 const eventTitles = {
-  // onTap: 'Tap',
+  onTap: 'Tap',
   onTapStart: 'Tap Start',
   onTapEnd: 'Tap End',
-  // onMouseEnter: 'Hover',
-  // onMouseLeave: 'Leave',
+  onMouseEnter: 'Hover',
+  onMouseLeave: 'Leave',
 }
 
 const events = Object.keys(eventTitles)
@@ -87,7 +87,7 @@ export class MagicMove extends React.Component<Props> {
         ...object,
         [key]: {
           type: ControlType.ComponentInstance,
-          title: '✦' + eventTitles[key],
+          title: '✦ ' + eventTitles[key],
           hidden(props) {
             return props.animate != 'events'
           },
@@ -328,18 +328,21 @@ export class MagicMove extends React.Component<Props> {
                 [key]: constraints[key].top,
               })),
             )
+
             props['left'] = buildAnimation(
               constraints.initial.left,
               ...events.map(key => ({
                 [key]: constraints[key].left,
               })),
             )
+
             props['width'] = buildAnimation(
               size.initial.width,
               ...events.map(key => ({
                 [key]: size[key].width,
               })),
             )
+
             props['height'] = buildAnimation(
               size.initial.height,
               ...events.map(key => ({
