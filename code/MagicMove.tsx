@@ -6,6 +6,7 @@ import {
   animate,
   Frame,
 } from 'framer'
+import { EmptyState } from './_EmptyState'
 
 interface Props {
   width: number
@@ -51,8 +52,8 @@ export class MagicMove extends React.Component<Props> {
   state = { elements: {} }
 
   static defaultProps = {
-    width: 250,
-    height: 250,
+    width: 275,
+    height: 220,
     animate: 'events',
     delay: 0,
     easing: 'spring',
@@ -447,81 +448,18 @@ export class MagicMove extends React.Component<Props> {
       }
     })
 
-    return hasChildren(children) &&
-      (Object.keys(eventsSelected).length || hasChildren(auto)) ? (
-      <Frame background={null} {...eventsSelected}>
+    const hasEvents = Object.keys(eventsSelected).length || hasChildren(auto)
+
+    return hasChildren(children) && hasEvents ? (
+      <Frame {...eventsSelected} background={null}>
         {this.clone({ element: children[0], render: true, isParent: true })}
       </Frame>
     ) : (
-      <div style={{ width: width, height: height }}>
-        <div style={{ ...messageBoxStyle, width: width, height: height }}>
-          <div style={{ display: 'flex' }}>
-            <div
-              style={{
-                ...(children[0] ? numberStyleOff : numberStyle),
-                marginRight: 15,
-              }}
-            >
-              Initial
-            </div>
-            {/* <div style={target[0] ? numberStyleOff : numberStyle}>Target</div> */}
-          </div>
-          <div style={textStyle}>Connect to initial and target</div>
-        </div>
-      </div>
+      <EmptyState
+        size={{ width, height }}
+        initial={hasChildren(children)}
+        event={hasEvents}
+      />
     )
   }
-}
-
-const messageBoxStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexDirection: 'column',
-
-  minWidth: 175,
-  height: 58,
-  padding: 16,
-
-  borderRadius: 3,
-  background: 'rgba(136, 85, 255, 0.1)',
-  boxShadow: 'inset 0 0 0 1px rgba(137, 87, 255, 0.5)',
-}
-
-const numberStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-
-  width: 66,
-  height: 34,
-
-  borderRadius: 3,
-  fontSize: 14,
-  fontWeight: 800,
-  background: '#8855FF',
-  color: 'white',
-}
-
-const numberStyleOff: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-
-  width: 66,
-  height: 34,
-
-  borderRadius: 3,
-  fontSize: 14,
-  fontWeight: 800,
-  background: 'rgba(135, 85, 255, .3)',
-  color: 'white',
-}
-
-const textStyle: React.CSSProperties = {
-  fontSize: 16,
-  lineHeight: 1.3,
-  color: '#8855FF',
-  marginTop: 10,
-  textAlign: 'center',
 }
