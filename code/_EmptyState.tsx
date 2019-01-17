@@ -2,22 +2,18 @@
 
 import * as React from 'react'
 import { Frame } from 'framer'
-import { RenderEnvironment, RenderTarget } from './_RenderEnvironment'
 
 const color = '136, 85, 255'
 
 export const EmptyState = ({ size, initial, event }) => {
-  const { zoom, target } = RenderEnvironment
   const { width, height } = size
 
   const minHeight = 24
-  const arrowWidth = 28 / zoom
-  const hasAvailableHeight = height >= minHeight / zoom
+  const arrowWidth = 28
+  const hasAvailableHeight = height >= minHeight
 
-  const shouldShowArrow = hasAvailableHeight && width >= arrowWidth + 6 / zoom
+  const shouldShowArrow = hasAvailableHeight && width >= arrowWidth + 6
   const shouldShowTitle = hasAvailableHeight && shouldShowArrow
-
-  if (target !== RenderTarget.canvas) return null
 
   return (
     <Frame
@@ -34,30 +30,26 @@ export const EmptyState = ({ size, initial, event }) => {
       }}
     >
       {shouldShowTitle && (
-        <Title zoom={zoom}>
+        <Title>
           Connect to
-          <ChildType zoom={zoom} connected={initial}>
-            Initial
-          </ChildType>
+          <ChildType connected={initial}>Initial</ChildType>
           and
-          <ChildType zoom={zoom} connected={event}>
-            ✦︎ Event
-          </ChildType>
+          <ChildType connected={event}>✦︎ Event</ChildType>
         </Title>
       )}
-      {shouldShowArrow && <Arrow zoom={zoom} />}
+      {shouldShowArrow && <Arrow />}
     </Frame>
   )
 }
 
-const Title = ({ zoom, children }) => (
+const Title = ({ children }) => (
   <span
     style={{
       flex: 'auto',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textAlign: 'center',
-      fontSize: 12 * scale(zoom),
+      fontSize: 12,
       WebkitMaskImage:
         'linear-gradient(90deg, black, black calc(100% - 12px), transparent)',
     }}
@@ -66,12 +58,12 @@ const Title = ({ zoom, children }) => (
   </span>
 )
 
-const ChildType = ({ zoom, children, connected = false }) => (
+const ChildType = ({ children, connected = false }) => (
   <span
     style={{
-      padding: `${2 * scale(zoom)}px ${5 * scale(zoom)}px ${3 * scale(zoom)}px`,
-      margin: 5 * scale(zoom),
-      borderRadius: 2 * scale(zoom),
+      padding: `2px 5px 3px`,
+      margin: 5,
+      borderRadius: 2,
       border: `1px solid rgba(${color}, .4)`,
 
       background: !connected && `rgba(${color}, .9)`,
@@ -82,20 +74,14 @@ const ChildType = ({ zoom, children, connected = false }) => (
   </span>
 )
 
-const Arrow = ({ zoom }) => {
+const Arrow = () => {
   const width = 14
   const height = 7
 
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
-      style={{
-        width: width,
-        opacity: 0.9,
-        transform: `scale(${scale(zoom)})`,
-        transformOrigin: '100% 50%',
-        marginTop: 1,
-      }}
+      style={{ flexShrink: 0, width: width, marginTop: 1 }}
     >
       <g transform="translate(0.5 0.5)">
         <path
@@ -114,6 +100,3 @@ const Arrow = ({ zoom }) => {
     </svg>
   )
 }
-
-const scale = zoom =>
-  Math.ceil(0.9 * Math.pow(11, Math.pow(zoom, 0.2))) / (11 * zoom)
