@@ -1,11 +1,17 @@
 // Forked from /src/components/EmptyState.tsx
 
 import * as React from 'react'
-import { Frame } from 'framer'
+import { Frame, Size } from 'framer'
 
 const color = '136, 85, 255'
 
-export default ({ size, initial, event }) => {
+export interface Props {
+  initial: number
+  event: number
+  size: Size
+}
+
+export default ({ size, initial, event }: Props) => {
   const { width, height } = size
 
   const minHeight = 24
@@ -42,7 +48,7 @@ export default ({ size, initial, event }) => {
   )
 }
 
-const Title = ({ children }) => (
+const Title: React.SFC = ({ children }) => (
   <span
     style={{
       flex: 'auto',
@@ -58,7 +64,10 @@ const Title = ({ children }) => (
   </span>
 )
 
-const ChildType = ({ children, connected = false }) => (
+const ChildType: React.SFC<{ connected: number }> = ({
+  children,
+  connected = false,
+}) => (
   <span
     style={{
       padding: `2px 5px 3px`,
