@@ -12,15 +12,6 @@ interface Props {
   width: number
   height: number
 
-  children: React.ReactChild
-
-  auto: React.ReactChild
-  onTap: React.ReactChild
-  onTapStart: React.ReactChild
-  onTapEnd: React.ReactChild
-  onMouseEnter: React.ReactChild
-  onMouseLeave: React.ReactChild
-
   animate: string
   delay: number
   easing: string
@@ -28,6 +19,17 @@ interface Props {
   friction: number
   duration: number
   curve: string
+
+  auto: React.ReactNode
+}
+
+interface CloneProps {
+  element: React.ReactElement<any>
+  render: boolean
+  isParent: boolean
+  parentSize: object
+  stop: boolean
+  origin: string
 }
 
 const eventTitles = {
@@ -40,7 +42,8 @@ const eventTitles = {
 
 const events = Object.keys(eventTitles)
 
-const hasChildren = children => React.Children.count(children)
+const hasChildren = (children: React.ReactNode) =>
+  React.Children.count(children)
 
 export class MagicMove extends React.Component<Props> {
   childIndex = 0
@@ -157,7 +160,7 @@ export class MagicMove extends React.Component<Props> {
     },
   }
 
-  buildAnimation = (initial, ...events) => {
+  buildAnimation = (initial: number | object, ...events: object[]) => {
     const { props, animations } = this
     const options = {}
     const animated = Animatable(initial)
@@ -182,10 +185,10 @@ export class MagicMove extends React.Component<Props> {
     return animated
   }
 
-  runAnimations = event =>
+  runAnimations = (event: string) =>
     this.animations[event].forEach(animation => animation())
 
-  cleanSide = (props, side, parentSize) => {
+  cleanSide = (props: object, side: string, parentSize: object) => {
     if (typeof props[side] == 'string') {
       if (props[side].includes('fr'))
         return parseFloat(props[side]) * parentSize[side]
@@ -196,7 +199,13 @@ export class MagicMove extends React.Component<Props> {
     return props[side]
   }
 
-  getSize = props => {
+  getSize = (props: {
+    left: number
+    right: number
+    top: number
+    bottom: number
+    parentSize: object
+  }) => {
     const { left, right, top, bottom, parentSize } = props
 
     const size = {
@@ -217,7 +226,7 @@ export class MagicMove extends React.Component<Props> {
     return returnSize
   }
 
-  getConstraints = props => {
+  getConstraints = (props: { parentSize: object }) => {
     const orientation = { top: 'Y', left: 'X' }
     const constraints = ['top', 'left']
 
@@ -249,7 +258,14 @@ export class MagicMove extends React.Component<Props> {
     return returnConstraints
   }
 
-  handleProps = ({ element, render, isParent, parentSize, stop, origin }) => {
+  handleProps = ({
+    element,
+    render,
+    isParent,
+    parentSize,
+    stop,
+    origin,
+  }: CloneProps) => {
     const props = {}
     const elements = this.state.elements
     const { childIndex } = this
@@ -266,7 +282,7 @@ export class MagicMove extends React.Component<Props> {
       if (propsTransform) {
         const { initial } = propsTransform
 
-        if (element.type.name == 'WithEventsHOC') {
+        if (element.type['name'] == 'WithEventsHOC') {
           const { getConstraints, getSize, buildAnimation } = this
 
           const events = Object.keys(propsTransform).filter(
@@ -369,13 +385,13 @@ export class MagicMove extends React.Component<Props> {
     stop = false,
     parentSize = null,
     origin = null,
-  }) => {
-    if (element.type.name == 'Unwrap') stop = true
+  }: Partial<CloneProps>) => {
+    if (element.type['name'] == 'Unwrap') stop = true
     if (isParent) this.childIndex = 0
     this.childIndex++
 
     return React.cloneElement(
-      element,
+      element as React.ReactElement<any>,
 
       this.handleProps({
         element,
@@ -388,8 +404,8 @@ export class MagicMove extends React.Component<Props> {
 
       React.Children.map(element.props.children, child => {
         const { width, height } =
-          element.type.name == 'Unwrap'
-            ? parentSize
+          element.type['name'] == 'Unwrap'
+            ? (parentSize as { width: number; height: number })
             : this.getSize({ ...element.props, parentSize })
 
         return this.clone({
@@ -424,7 +440,7 @@ export class MagicMove extends React.Component<Props> {
     })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: object) {
     const { props } = this
 
     if (props !== prevProps) this.processProps()
