@@ -6,7 +6,7 @@ import {
   animate,
   Frame,
 } from 'framer'
-import { EmptyState } from './_EmptyState'
+import EmptyState from './_EmptyState'
 
 interface Props {
   width: number

@@ -5,7 +5,7 @@ import { Frame } from 'framer'
 
 const color = '136, 85, 255'
 
-export const EmptyState = ({ size, initial, event }) => {
+export default ({ size, initial, event }) => {
   const { width, height } = size
 
   const minHeight = 24
