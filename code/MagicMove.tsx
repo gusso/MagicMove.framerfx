@@ -244,9 +244,10 @@ export class MagicMove extends React.Component<Props> {
         returnConstraints[side] = props[side]
       else if (![side, oppositeSide].every(i => props[i] == null))
         if (props[side] != null) returnConstraints[side] = props[side]
-        else
+        else {
           returnConstraints[side] =
             props.parentSize[sizeSide] - props[oppositeSide] - cleanSide
+        }
       else
         returnConstraints[side] =
           (props.parentSize[sizeSide] *
@@ -289,28 +290,6 @@ export class MagicMove extends React.Component<Props> {
             state => state != 'initial',
           )
 
-          const constraints = {
-            initial: getConstraints(initial),
-            ...events.reduce(
-              (object, key) => ({
-                ...object,
-                [key]: getConstraints(propsTransform[key]),
-              }),
-              {},
-            ),
-          }
-
-          const size = {
-            initial: getSize(initial),
-            ...events.reduce(
-              (object, key) => ({
-                ...object,
-                [key]: getSize(propsTransform[key]),
-              }),
-              {},
-            ),
-          }
-
           const found = Object.keys(initial).filter(key => {
             if (typeof initial[key] == 'string' && initial[key])
               if (initial[key].includes('fr')) return true
@@ -340,6 +319,28 @@ export class MagicMove extends React.Component<Props> {
           }
 
           if (!isParent) {
+            const constraints = {
+              initial: getConstraints(initial),
+              ...events.reduce(
+                (object, key) => ({
+                  ...object,
+                  [key]: getConstraints(propsTransform[key]),
+                }),
+                {},
+              ),
+            }
+
+            const size = {
+              initial: getSize(initial),
+              ...events.reduce(
+                (object, key) => ({
+                  ...object,
+                  [key]: getSize(propsTransform[key]),
+                }),
+                {},
+              ),
+            }
+
             props['bottom'] = null
             props['right'] = null
 
