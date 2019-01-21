@@ -6,7 +6,6 @@ import {
   animate,
   Frame,
   Size,
-  Stack,
 } from 'framer'
 import EmptyState from './_EmptyState'
 import { ConstraintValues } from './Constraints'
@@ -243,26 +242,19 @@ export class MagicMove extends React.Component<Props> {
           const constraintValues = {
             initial: ConstraintValues.toRect(
               ConstraintValues.fromProperties(initial),
-              parentSize || null,
-              null,
-              true,
+              initial.parentSize || null,
             ),
             ...events.reduce(
               (object, key) => ({
                 ...object,
                 [key]: ConstraintValues.toRect(
                   ConstraintValues.fromProperties(propsTransform[key]),
-                  parentSize || null,
-                  null,
-                  true,
+                  propsTransform[key].parentSize || null,
                 ),
               }),
               {},
             ),
           }
-
-          // console.log(constraintValues.initial, constraintValues.onTap
-          console.log(parentSize)
 
           if (element.type['name'] != 'Unwrap') {
             props['bottom'] = null
@@ -313,8 +305,6 @@ export class MagicMove extends React.Component<Props> {
     if (isParent) this.childIndex = 0
     this.childIndex++
 
-    const { width, height } = element.props
-
     return React.cloneElement(
       element as React.ReactElement<any>,
 
@@ -330,13 +320,12 @@ export class MagicMove extends React.Component<Props> {
         return this.clone({
           element: child,
           render,
-          parentSize: { width, height },
-          // parentSize: ConstraintValues.toSize(
-          //   ConstraintValues.fromProperties(element.props),
-          //   parentSize || null,
-          //   null,
-          //   null,
-          // ),
+          parentSize: ConstraintValues.toSize(
+            ConstraintValues.fromProperties(element.props),
+            parentSize || null,
+            null,
+            null,
+          ),
           origin,
         })
       }),
