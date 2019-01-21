@@ -46,7 +46,7 @@ const eventTitles = {
 const events = Object.keys(eventTitles)
 
 const hasChildren = (children: React.ReactNode) =>
-  React.Children.count(children)
+  !!React.Children.count(children)
 
 export class MagicMove extends React.Component<Props> {
   childIndex = 0
@@ -377,24 +377,25 @@ export class MagicMove extends React.Component<Props> {
 
   render() {
     const { width, height, children, auto } = this.props
-    let eventsSelected = {}
-    let hasEvents = true
+    let hasEvents = false
+    let eventsConnected = {}
 
-    if (!isCanvas) {
-      events.forEach(event => {
-        if (hasChildren(this.props[event])) {
-          eventsSelected[event] = () => this.runAnimations(event)
+    events.forEach(event => {
+      if (hasChildren(this.props[event])) {
+        hasEvents = true
+        if (!isCanvas) {
+          eventsConnected[event] = () => this.runAnimations(event)
         }
-      })
+      }
+    })
 
-      hasEvents = !!Object.keys(eventsSelected).length || !!hasChildren(auto)
-    }
+    if (!!hasChildren(auto)) hasEvents = true
 
     return hasChildren(children) && hasEvents ? (
       isCanvas ? (
         children
       ) : (
-        <Frame {...eventsSelected} background={null}>
+        <Frame {...eventsConnected} background={null}>
           {this.clone({ element: children[0], render: true, isParent: true })}
         </Frame>
       )

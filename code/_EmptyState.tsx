@@ -6,7 +6,7 @@ import { Frame, Size } from 'framer'
 const color = '136, 85, 255'
 
 export interface Props {
-  initial: number
+  initial: boolean
   event: boolean
   size: Size
 }
@@ -37,7 +37,7 @@ export default ({ size, initial, event }: Props) => {
     </span>
   )
 
-  const ChildType: React.SFC<{ connected: number }> = ({
+  const ChildType: React.SFC<{ connected: boolean }> = ({
     children,
     connected = false,
   }) => (
