@@ -18,6 +18,6 @@
   "name": "@framer/gusso.magic-move",
   "version": "1.5.0",
   "dependencies": {
-    "@framer/benjamin.profile": "^1.12.0"
+    "@framer/benjamin.super-ellipse": "^1.1.0"
   }
 }

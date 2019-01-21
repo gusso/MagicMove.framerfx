@@ -10,6 +10,8 @@ import {
 import EmptyState from './_EmptyState'
 import { ConstraintValues } from './Constraints'
 
+const isCanvas = window.hasOwnProperty('Vekter')
+
 interface Props {
   width: number
   height: number
@@ -242,14 +244,14 @@ export class MagicMove extends React.Component<Props> {
           const constraintValues = {
             initial: ConstraintValues.toRect(
               ConstraintValues.fromProperties(initial),
-              initial.parentSize || null,
+              initial.parentSize,
             ),
             ...events.reduce(
               (object, key) => ({
                 ...object,
                 [key]: ConstraintValues.toRect(
                   ConstraintValues.fromProperties(propsTransform[key]),
-                  propsTransform[key].parentSize || null,
+                  propsTransform[key].parentSize,
                 ),
               }),
               {},
@@ -322,8 +324,7 @@ export class MagicMove extends React.Component<Props> {
           render,
           parentSize: ConstraintValues.toSize(
             ConstraintValues.fromProperties(element.props),
-            parentSize || null,
-            null,
+            parentSize,
             null,
           ),
           origin,
@@ -354,35 +355,46 @@ export class MagicMove extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps: object) {
-    const { props } = this
+    if (!isCanvas) {
+      const { props } = this
 
-    if (props !== prevProps) this.processProps()
+      if (props !== prevProps) this.processProps()
 
-    if (hasChildren(props.auto)) {
-      setTimeout(() => this.runAnimations('auto'), props.delay * 1000)
+      if (hasChildren(props.auto)) {
+        setTimeout(() => this.runAnimations('auto'), props.delay * 1000)
+      }
     }
   }
 
   componentDidMount() {
-    this.processProps()
+    if (!isCanvas) {
+      this.processProps()
+    }
   }
 
   render() {
     const { width, height, children, auto } = this.props
     let eventsSelected = {}
+    let hasEvents = true
 
-    events.forEach(event => {
-      if (hasChildren(this.props[event])) {
-        eventsSelected[event] = () => this.runAnimations(event)
-      }
-    })
+    if (!isCanvas) {
+      events.forEach(event => {
+        if (hasChildren(this.props[event])) {
+          eventsSelected[event] = () => this.runAnimations(event)
+        }
+      })
 
-    const hasEvents = Object.keys(eventsSelected).length || hasChildren(auto)
+      hasEvents = !!Object.keys(eventsSelected).length || !!hasChildren(auto)
+    }
 
     return hasChildren(children) && hasEvents ? (
-      <Frame {...eventsSelected} background={null}>
-        {this.clone({ element: children[0], render: true, isParent: true })}
-      </Frame>
+      isCanvas ? (
+        children
+      ) : (
+        <Frame {...eventsSelected} background={null}>
+          {this.clone({ element: children[0], render: true, isParent: true })}
+        </Frame>
+      )
     ) : (
       <EmptyState
         size={{ width, height }}

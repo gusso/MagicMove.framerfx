@@ -7,7 +7,7 @@ const color = '136, 85, 255'
 
 export interface Props {
   initial: number
-  event: number
+  event: boolean
   size: Size
 }
 
