@@ -258,38 +258,36 @@ export class MagicMove extends React.Component<Props> {
             ),
           }
 
-          if (element.type['name'] != 'Unwrap') {
-            props['bottom'] = null
-            props['right'] = null
+          props['bottom'] = null
+          props['right'] = null
 
-            props['top'] = buildAnimation(
-              constraintValues.initial.y,
-              ...events.map(key => ({
-                [key]: constraintValues[key].y,
-              })),
-            )
+          props['top'] = buildAnimation(
+            constraintValues.initial.y,
+            ...events.map(key => ({
+              [key]: constraintValues[key].y,
+            })),
+          )
 
-            props['left'] = buildAnimation(
-              constraintValues.initial.x,
-              ...events.map(key => ({
-                [key]: constraintValues[key].x,
-              })),
-            )
+          props['left'] = buildAnimation(
+            constraintValues.initial.x,
+            ...events.map(key => ({
+              [key]: constraintValues[key].x,
+            })),
+          )
 
-            props['width'] = buildAnimation(
-              constraintValues.initial.width,
-              ...events.map(key => ({
-                [key]: constraintValues[key].width,
-              })),
-            )
+          props['width'] = buildAnimation(
+            constraintValues.initial.width,
+            ...events.map(key => ({
+              [key]: constraintValues[key].width,
+            })),
+          )
 
-            props['height'] = buildAnimation(
-              constraintValues.initial.height,
-              ...events.map(key => ({
-                [key]: constraintValues[key].height,
-              })),
-            )
-          }
+          props['height'] = buildAnimation(
+            constraintValues.initial.height,
+            ...events.map(key => ({
+              [key]: constraintValues[key].height,
+            })),
+          )
         }
       }
     }
@@ -306,17 +304,22 @@ export class MagicMove extends React.Component<Props> {
   }: Partial<CloneProps>) => {
     if (isParent) this.childIndex = 0
     this.childIndex++
+    let handleProps = {}
 
-    return React.cloneElement(
-      element as React.ReactElement<any>,
-
-      this.handleProps({
+    if (element.type['name'] == 'WithEventsHOC') {
+      handleProps = this.handleProps({
         element,
         render,
         isParent,
         parentSize,
         origin,
-      }),
+      })
+    }
+
+    return React.cloneElement(
+      element as React.ReactElement<any>,
+
+      handleProps,
 
       React.Children.map(element.props.children, child => {
         return this.clone({
