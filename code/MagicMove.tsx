@@ -305,8 +305,18 @@ export class MagicMove extends React.Component<Props> {
     if (isParent) this.childIndex = 0
     this.childIndex++
     let handleProps = {}
+    let fractionParent = false
 
-    if (element.type['name'] == 'WithEventsHOC') {
+    if (parentSize) {
+      fractionParent = !parentSize.width
+    }
+
+    if (
+      element.type['name'] == 'WithEventsHOC' &&
+      !element.props.width.toString().endsWith('fr') &&
+      !element.props.height.toString().endsWith('fr') &&
+      !fractionParent
+    ) {
       handleProps = this.handleProps({
         element,
         render,

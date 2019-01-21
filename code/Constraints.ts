@@ -82,7 +82,6 @@ export namespace ConstraintValues {
       centerX,
       centerY,
       aspectRatio,
-      autoSize,
     } = props
 
     const constraints = ConstraintMask.quickfix({
@@ -93,7 +92,6 @@ export namespace ConstraintValues {
       widthType: valueToDimensionType(width),
       heightType: valueToDimensionType(height),
       aspectRatio: aspectRatio || null,
-      fixedSize: autoSize === true,
     })
 
     let widthValue: number | null = null
@@ -218,11 +216,7 @@ export namespace ConstraintValues {
     return sizeAfterApplyingDefaultsAndAspectRatio(width, height, values)
   }
 
-  export const toRect = (
-    values,
-    parentSize: Size | null,
-    autoSize: Size | null = null,
-  ): Rect => {
+  export const toRect = (values, parentSize: Size | null): Rect => {
     let x = values.left || 0
     let y = values.top || 0
     let width: number | null = null
@@ -239,8 +233,6 @@ export namespace ConstraintValues {
 
     if (parentWidth && isFiniteNumber(hOpposingPinsOffset)) {
       width = parentWidth - hOpposingPinsOffset
-    } else if (autoSize && values.widthType === DimensionType.Auto) {
-      width = autoSize.width
     } else if (isFiniteNumber(values.width)) {
       switch (values.widthType) {
         case DimensionType.FixedNumber:
@@ -261,8 +253,6 @@ export namespace ConstraintValues {
 
     if (parentHeight && isFiniteNumber(vOpposingPinsOffset)) {
       height = parentHeight - vOpposingPinsOffset
-    } else if (autoSize && values.heightType === DimensionType.Auto) {
-      height = autoSize.height
     } else if (isFiniteNumber(values.height)) {
       switch (values.heightType) {
         case DimensionType.FixedNumber:
