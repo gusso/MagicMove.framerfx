@@ -33,6 +33,7 @@ interface CloneProps {
   isParent: boolean
   parentSize: Size
   origin: string
+  stop: boolean
 }
 
 const eventTitles = {
@@ -301,29 +302,23 @@ export class MagicMove extends React.Component<Props> {
     isParent = false,
     parentSize = null,
     origin = null,
+    stop = false,
   }: Partial<CloneProps>) => {
     if (isParent) this.childIndex = 0
     this.childIndex++
     let handleProps = {}
-    let fractionParent = false
 
-    if (parentSize) {
-      fractionParent = !parentSize.width
-    }
-
-    if (
-      element.type['name'] == 'WithEventsHOC' &&
-      !element.props.width.toString().endsWith('fr') &&
-      !element.props.height.toString().endsWith('fr') &&
-      !fractionParent
-    ) {
+    if (element.type['name'] == 'WithEventsHOC' && !stop) {
       handleProps = this.handleProps({
         element,
         render,
         isParent,
         parentSize,
         origin,
+        stop,
       })
+    } else {
+      stop = true
     }
 
     return React.cloneElement(
@@ -338,6 +333,7 @@ export class MagicMove extends React.Component<Props> {
             parentSize,
           ),
           origin,
+          stop,
         })
       }),
     )
