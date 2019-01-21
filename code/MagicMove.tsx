@@ -5,8 +5,11 @@ import {
   Animatable,
   animate,
   Frame,
+  Size,
+  Stack,
 } from 'framer'
 import EmptyState from './_EmptyState'
+import { ConstraintValues } from './Constraints'
 
 interface Props {
   width: number
@@ -27,8 +30,7 @@ interface CloneProps {
   element: React.ReactElement<any>
   render: boolean
   isParent: boolean
-  parentSize: object
-  stop: boolean
+  parentSize: Size
   origin: string
 }
 
@@ -188,83 +190,11 @@ export class MagicMove extends React.Component<Props> {
   runAnimations = (event: string) =>
     this.animations[event].forEach(animation => animation())
 
-  cleanSide = (props: object, side: string, parentSize: object) => {
-    if (typeof props[side] == 'string') {
-      if (props[side].includes('fr'))
-        return parseFloat(props[side]) * parentSize[side]
-
-      return (parseFloat(props[side]) / 100) * parentSize[side]
-    }
-
-    return props[side]
-  }
-
-  getSize = (props: {
-    left: number
-    right: number
-    top: number
-    bottom: number
-    parentSize: object
-  }) => {
-    const { left, right, top, bottom, parentSize } = props
-
-    const size = {
-      width: [left, right],
-      height: [top, bottom],
-    }
-
-    const returnSize = {
-      width: null,
-      height: null,
-    }
-
-    for (const side in size)
-      returnSize[side] = size[side].every(i => i != null)
-        ? parentSize[side] - size[side][0] - size[side][1]
-        : this.cleanSide(props, side, parentSize)
-
-    return returnSize
-  }
-
-  getConstraints = (props: { parentSize: object }) => {
-    const orientation = { top: 'Y', left: 'X' }
-    const constraints = ['top', 'left']
-
-    const returnConstraints = {
-      top: null,
-      left: null,
-    }
-
-    constraints.forEach(side => {
-      const sizeSide = side == 'left' ? 'width' : 'height'
-      const oppositeSide = side == 'left' ? 'right' : 'bottom'
-      const cleanSide = this.cleanSide(props, sizeSide, props.parentSize)
-
-      if (constraints.every(i => props[i] != null))
-        returnConstraints[side] = props[side]
-      else if (![side, oppositeSide].every(i => props[i] == null))
-        if (props[side] != null) returnConstraints[side] = props[side]
-        else {
-          returnConstraints[side] =
-            props.parentSize[sizeSide] - props[oppositeSide] - cleanSide
-        }
-      else
-        returnConstraints[side] =
-          (props.parentSize[sizeSide] *
-            parseFloat(props['center' + orientation[side]])) /
-            100 -
-          cleanSide / 2
-    })
-
-    return returnConstraints
-  }
-
   handleProps = ({
     element,
     render,
     isParent,
     parentSize,
-    stop,
     origin,
   }: CloneProps) => {
     const props = {}
@@ -282,93 +212,87 @@ export class MagicMove extends React.Component<Props> {
 
       if (propsTransform) {
         const { initial } = propsTransform
+        const { buildAnimation } = this
 
-        if (element.type['name'] == 'WithEventsHOC') {
-          const { getConstraints, getSize, buildAnimation } = this
+        const events = Object.keys(propsTransform).filter(
+          state => state != 'initial',
+        )
 
-          const events = Object.keys(propsTransform).filter(
-            state => state != 'initial',
-          )
+        props['background'] = buildAnimation(
+          initial.background,
+          ...events.map(key => ({
+            [key]: propsTransform[key].background,
+          })),
+        )
 
-          const found = Object.keys(initial).filter(key => {
-            if (typeof initial[key] == 'string' && initial[key])
-              if (initial[key].includes('fr')) return true
-          })
+        props['opacity'] = buildAnimation(
+          initial.opacity,
+          ...events.map(key => ({
+            [key]: propsTransform[key].opacity,
+          })),
+        )
 
-          if (!found.length && !stop) {
-            props['background'] = buildAnimation(
-              initial.background,
-              ...events.map(key => ({
-                [key]: propsTransform[key].background,
-              })),
-            )
+        props['rotation'] = buildAnimation(
+          initial.rotation,
+          ...events.map(key => ({
+            [key]: propsTransform[key].rotation,
+          })),
+        )
 
-            props['opacity'] = buildAnimation(
-              initial.opacity,
-              ...events.map(key => ({
-                [key]: propsTransform[key].opacity,
-              })),
-            )
-
-            props['rotation'] = buildAnimation(
-              initial.rotation,
-              ...events.map(key => ({
-                [key]: propsTransform[key].rotation,
-              })),
-            )
+        if (!isParent) {
+          const constraintValues = {
+            initial: ConstraintValues.toRect(
+              ConstraintValues.fromProperties(initial),
+              parentSize || null,
+              null,
+              true,
+            ),
+            ...events.reduce(
+              (object, key) => ({
+                ...object,
+                [key]: ConstraintValues.toRect(
+                  ConstraintValues.fromProperties(propsTransform[key]),
+                  parentSize || null,
+                  null,
+                  true,
+                ),
+              }),
+              {},
+            ),
           }
 
-          if (!isParent) {
-            const constraints = {
-              initial: getConstraints(initial),
-              ...events.reduce(
-                (object, key) => ({
-                  ...object,
-                  [key]: getConstraints(propsTransform[key]),
-                }),
-                {},
-              ),
-            }
+          // console.log(constraintValues.initial, constraintValues.onTap
+          console.log(parentSize)
 
-            const size = {
-              initial: getSize(initial),
-              ...events.reduce(
-                (object, key) => ({
-                  ...object,
-                  [key]: getSize(propsTransform[key]),
-                }),
-                {},
-              ),
-            }
-
+          if (element.type['name'] != 'Unwrap') {
             props['bottom'] = null
             props['right'] = null
 
             props['top'] = buildAnimation(
-              constraints.initial.top,
+              constraintValues.initial.y,
               ...events.map(key => ({
-                [key]: constraints[key].top,
+                [key]: constraintValues[key].y,
               })),
             )
 
             props['left'] = buildAnimation(
-              constraints.initial.left,
+              constraintValues.initial.x,
               ...events.map(key => ({
-                [key]: constraints[key].left,
+                [key]: constraintValues[key].x,
               })),
             )
 
             props['width'] = buildAnimation(
-              size.initial.width,
+              constraintValues.initial.width,
               ...events.map(key => ({
-                [key]: size[key].width,
+                [key]: constraintValues[key].width,
               })),
             )
 
             props['height'] = buildAnimation(
-              size.initial.height,
+              constraintValues.initial.height,
               ...events.map(key => ({
-                [key]: size[key].height,
+                [key]: constraintValues[key].height,
               })),
             )
           }
@@ -383,13 +307,13 @@ export class MagicMove extends React.Component<Props> {
     element,
     render = false,
     isParent = false,
-    stop = false,
     parentSize = null,
     origin = null,
   }: Partial<CloneProps>) => {
-    if (element.type['name'] == 'Unwrap') stop = true
     if (isParent) this.childIndex = 0
     this.childIndex++
+
+    const { width, height } = element.props
 
     return React.cloneElement(
       element as React.ReactElement<any>,
@@ -398,22 +322,21 @@ export class MagicMove extends React.Component<Props> {
         element,
         render,
         isParent,
-        stop,
         parentSize,
         origin,
       }),
 
       React.Children.map(element.props.children, child => {
-        const { width, height } =
-          element.type['name'] == 'Unwrap'
-            ? (parentSize as { width: number; height: number })
-            : this.getSize({ ...element.props, parentSize })
-
         return this.clone({
           element: child,
           render,
-          stop,
           parentSize: { width, height },
+          // parentSize: ConstraintValues.toSize(
+          //   ConstraintValues.fromProperties(element.props),
+          //   parentSize || null,
+          //   null,
+          //   null,
+          // ),
           origin,
         })
       }),
