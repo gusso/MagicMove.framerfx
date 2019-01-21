@@ -318,9 +318,7 @@ export class MagicMove extends React.Component<Props> {
 
     return React.cloneElement(
       element as React.ReactElement<any>,
-
       handleProps,
-
       React.Children.map(element.props.children, child => {
         return this.clone({
           element: child,
@@ -328,7 +326,6 @@ export class MagicMove extends React.Component<Props> {
           parentSize: ConstraintValues.toSize(
             ConstraintValues.fromProperties(element.props),
             parentSize,
-            null,
           ),
           origin,
         })

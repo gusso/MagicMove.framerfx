@@ -164,11 +164,7 @@ export namespace ConstraintValues {
     }
   }
 
-  export const toSize = (
-    values,
-    parentSize: Size | null | undefined,
-    autoSize: Size | null,
-  ): Size => {
+  export const toSize = (values, parentSize: Size | null | undefined): Size => {
     let width: number | null = null
     let height: number | null = null
 
@@ -183,8 +179,6 @@ export namespace ConstraintValues {
 
     if (parentWidth && isFiniteNumber(hOpposingPinsOffset)) {
       width = parentWidth - hOpposingPinsOffset
-    } else if (autoSize && values.widthType === DimensionType.Auto) {
-      width = autoSize.width
     } else if (isFiniteNumber(values.width)) {
       switch (values.widthType) {
         case DimensionType.FixedNumber:
@@ -205,8 +199,6 @@ export namespace ConstraintValues {
 
     if (parentHeight && isFiniteNumber(vOpposingPinsOffset)) {
       height = parentHeight - vOpposingPinsOffset
-    } else if (autoSize && values.heightType === DimensionType.Auto) {
-      height = autoSize.height
     } else if (isFiniteNumber(values.height)) {
       switch (values.heightType) {
         case DimensionType.FixedNumber:
