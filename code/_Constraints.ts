@@ -1,3 +1,5 @@
+// Forked from /src/render/types/Constraints.ts
+
 import { Rect, Size, Animatable } from 'framer'
 
 export enum DimensionType {

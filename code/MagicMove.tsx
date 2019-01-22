@@ -8,7 +8,7 @@ import {
   Size,
 } from 'framer'
 import EmptyState from './_EmptyState'
-import { ConstraintValues } from './Constraints'
+import { ConstraintValues } from './_Constraints'
 
 const isCanvas = window.hasOwnProperty('Vekter')
 
