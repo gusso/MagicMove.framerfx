@@ -34,7 +34,7 @@ Any component inside a Stack will not animate, but you can press **`⌘+⌫`** t
 
 ## Version History
 
-**2.0.0**  
+**1.12.0**  
 • Support for new events: `Tap Start`, `Tap End`, `Mouse Over`, `Mouse Leave`  
 • Connected Frames are now previewed on Property Panel.  
 • Improved rendering speed to stop errors on the canvas.
