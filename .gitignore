@@ -1,7 +1,8 @@
+*.framerxproj
 .backups
 .cache
 .npmrc
-*.framerxproj
+.project.log
 build
 code/canvas.tsx
 design
