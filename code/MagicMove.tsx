@@ -217,45 +217,45 @@ export class MagicMove extends React.Component<Props> {
         const { buildAnimation } = this
 
         const events = Object.keys(propsTransform).filter(
-          state => state != 'initial',
+          state => state != 'initial'
         )
 
         props['background'] = buildAnimation(
           initial.background,
           ...events.map(key => ({
             [key]: propsTransform[key].background,
-          })),
+          }))
         )
 
         props['opacity'] = buildAnimation(
           initial.opacity,
           ...events.map(key => ({
             [key]: propsTransform[key].opacity,
-          })),
+          }))
         )
 
         props['rotation'] = buildAnimation(
           initial.rotation,
           ...events.map(key => ({
             [key]: propsTransform[key].rotation,
-          })),
+          }))
         )
 
         if (!isParent) {
           const constraintValues = {
             initial: ConstraintValues.toRect(
               ConstraintValues.fromProperties(initial),
-              initial.parentSize,
+              initial.parentSize
             ),
             ...events.reduce(
               (object, key) => ({
                 ...object,
                 [key]: ConstraintValues.toRect(
                   ConstraintValues.fromProperties(propsTransform[key]),
-                  propsTransform[key].parentSize,
+                  propsTransform[key].parentSize
                 ),
               }),
-              {},
+              {}
             ),
           }
 
@@ -266,28 +266,28 @@ export class MagicMove extends React.Component<Props> {
             constraintValues.initial.y,
             ...events.map(key => ({
               [key]: constraintValues[key].y,
-            })),
+            }))
           )
 
           props['left'] = buildAnimation(
             constraintValues.initial.x,
             ...events.map(key => ({
               [key]: constraintValues[key].x,
-            })),
+            }))
           )
 
           props['width'] = buildAnimation(
             constraintValues.initial.width,
             ...events.map(key => ({
               [key]: constraintValues[key].width,
-            })),
+            }))
           )
 
           props['height'] = buildAnimation(
             constraintValues.initial.height,
             ...events.map(key => ({
               [key]: constraintValues[key].height,
-            })),
+            }))
           )
         }
       }
@@ -308,7 +308,7 @@ export class MagicMove extends React.Component<Props> {
     this.childIndex++
     let handleProps = {}
 
-    if (element.type['name'] == 'WithEventsHOC' && !stop) {
+    if (element.type['name'] == 'Frame' && !stop) {
       handleProps = this.handleProps({
         element,
         render,
@@ -330,12 +330,12 @@ export class MagicMove extends React.Component<Props> {
           render,
           parentSize: ConstraintValues.toSize(
             ConstraintValues.fromProperties(element.props),
-            parentSize,
+            parentSize
           ),
           origin,
           stop,
         })
-      }),
+      })
     )
   }
 
