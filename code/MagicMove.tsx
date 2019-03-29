@@ -8,7 +8,7 @@ import {
   Size,
 } from 'framer'
 import EmptyState from './_EmptyState'
-import { ConstraintValues } from './_Constraints'
+// import { ConstraintValues } from './_Constraints'
 
 const isCanvas = window.hasOwnProperty('Vekter')
 
@@ -220,26 +220,26 @@ export class MagicMove extends React.Component<Props> {
           state => state != 'initial'
         )
 
-        props['background'] = buildAnimation(
-          initial.background,
-          ...events.map(key => ({
-            [key]: propsTransform[key].background,
-          }))
-        )
+        // props['background'] = buildAnimation(
+        //   initial.background,
+        //   ...events.map(key => ({
+        //     [key]: propsTransform[key].background,
+        //   }))
+        // )
 
-        props['opacity'] = buildAnimation(
-          initial.opacity,
-          ...events.map(key => ({
-            [key]: propsTransform[key].opacity,
-          }))
-        )
+        // props['opacity'] = buildAnimation(
+        //   initial.opacity,
+        //   ...events.map(key => ({
+        //     [key]: propsTransform[key].opacity,
+        //   }))
+        // )
 
-        props['rotation'] = buildAnimation(
-          initial.rotation,
-          ...events.map(key => ({
-            [key]: propsTransform[key].rotation,
-          }))
-        )
+        // props['rotation'] = buildAnimation(
+        //   initial.rotation,
+        //   ...events.map(key => ({
+        //     [key]: propsTransform[key].rotation,
+        //   }))
+        // )
 
         if (!isParent) {
           const constraintValues = {
@@ -262,33 +262,35 @@ export class MagicMove extends React.Component<Props> {
           props['bottom'] = null
           props['right'] = null
 
-          props['top'] = buildAnimation(
-            constraintValues.initial.y,
-            ...events.map(key => ({
-              [key]: constraintValues[key].y,
-            }))
-          )
+          // props['top'] = buildAnimation(
+          //   constraintValues.initial.y,
+          //   ...events.map(key => ({
+          //     [key]: constraintValues[key].y,
+          //   }))
+          // )
 
-          props['left'] = buildAnimation(
-            constraintValues.initial.x,
-            ...events.map(key => ({
-              [key]: constraintValues[key].x,
-            }))
-          )
+          props['top'] = 0
 
-          props['width'] = buildAnimation(
-            constraintValues.initial.width,
-            ...events.map(key => ({
-              [key]: constraintValues[key].width,
-            }))
-          )
+          // props['left'] = buildAnimation(
+          //   constraintValues.initial.x,
+          //   ...events.map(key => ({
+          //     [key]: constraintValues[key].x,
+          //   }))
+          // )
 
-          props['height'] = buildAnimation(
-            constraintValues.initial.height,
-            ...events.map(key => ({
-              [key]: constraintValues[key].height,
-            }))
-          )
+          // props['width'] = buildAnimation(
+          //   constraintValues.initial.width,
+          //   ...events.map(key => ({
+          //     [key]: constraintValues[key].width,
+          //   }))
+          // )
+
+          // props['height'] = buildAnimation(
+          //   constraintValues.initial.height,
+          //   ...events.map(key => ({
+          //     [key]: constraintValues[key].height,
+          //   }))
+          // )
         }
       }
     }
