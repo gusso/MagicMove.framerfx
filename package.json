@@ -14,5 +14,6 @@
   },
   "author": "Henrique Gusso",
   "name": "@framer/gusso.magic-move",
-  "version": "1.13.0"
+  "version": "1.13.0",
+  "dependencies": {}
 }

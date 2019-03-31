@@ -1,5 +1,3 @@
-// Forked from /src/components/EmptyState.tsx
-
 import * as React from 'react'
 import { Frame, Size } from 'framer'
 

@@ -1,6 +1,8 @@
 *.framerxproj
+.DS_Store
 .backups
 .cache
+.framer-lock
 .npmrc
 .project.log
 build
@@ -8,4 +10,5 @@ code/canvas.tsx
 design
 dist
 node_modules
+yarn-error.log
 yarn.lock
