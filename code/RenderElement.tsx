@@ -12,7 +12,7 @@ import { ConstraintValues } from './Constraints'
 let i = 0
 
 const _RenderElement = props => {
-  const { element, isParent, parentSize } = props
+  const { element, isParent } = props
   const { children } = element.props
   const animation = useAnimation()
   const animatedProps = {}
@@ -33,7 +33,7 @@ const _RenderElement = props => {
 
         const constraints = ConstraintValues.toRect(
           ConstraintValues.fromProperties(event.constraints),
-          parentSize
+          event.parentSize
         )
 
         animatedProps['initial'] = {
@@ -97,7 +97,6 @@ const _RenderElement = props => {
             states={props.states}
             animationList={animationList}
             isParent={false}
-            parentSize={elementSize}
           />
         ))
   )
