@@ -3,13 +3,7 @@ import { Frame, Size } from 'framer'
 
 const color = '136, 85, 255'
 
-export interface Props {
-  initial: boolean
-  event: boolean
-  size: Size
-}
-
-export default ({ size, initial, event }: Props) => {
+const _EmptyState = ({ size, initial, event }) => {
   const { width, height } = size
 
   const minHeight = 24
@@ -107,3 +101,5 @@ export default ({ size, initial, event }: Props) => {
     </Frame>
   )
 }
+
+export const EmptyState = _EmptyState

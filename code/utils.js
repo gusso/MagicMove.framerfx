@@ -1,5 +1,9 @@
 import { Color } from 'framer'
 
+export const isFrame = element => {
+  return element.type.name == 'Frame'
+}
+
 export const normalizeRadius = radius => {
   if (radius == undefined) {
     return Array(4)

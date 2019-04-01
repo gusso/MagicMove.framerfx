@@ -1,29 +1,15 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { ControlType, addPropertyControls } from 'framer'
-import EmptyState from './EmptyState'
+import { ControlType, addPropertyControls, RenderTarget } from 'framer'
+import { EmptyState } from './EmptyState'
+import { RenderElement } from './RenderElement'
 import { getElements } from './getElements'
-import { RenderElements } from './RenderElement'
-
-const isCanvas = window.hasOwnProperty('Vekter')
-
-const eventTitles = {
-  onTap: 'Tap',
-  onTapStart: 'Tap Start',
-  onTapCancel: 'Tap Cancel',
-  onHoverStart: 'Hover Start',
-  onHoverEnd: 'Hover End',
-}
-
-const events = Object.keys(eventTitles)
-
-const hasChildren = children => !!React.Children.count(children)
 
 export const MagicMove = props => {
   const { width, height, children } = props
   const [elements, setElements] = useState({})
 
-  const sources = events
+  const sources = eventNames
     .concat(['children', 'auto'])
     .map(source => ({ name: source, element: props[source][0] }))
 
@@ -32,8 +18,7 @@ export const MagicMove = props => {
   }, [...sources.map(source => source.element)])
 
   let hasEvents = false
-
-  events.concat('auto').forEach(event => {
+  eventNames.concat('auto').forEach(event => {
     if (hasChildren(props[event])) hasEvents = true
   })
 
@@ -41,7 +26,7 @@ export const MagicMove = props => {
     isCanvas || Object.keys(elements).length == 0 ? (
       children
     ) : (
-      <RenderElements element={children[0]} states={elements} isParent />
+      <RenderElement element={children[0]} states={elements} isParent />
     )
   ) : (
     <EmptyState
@@ -51,6 +36,18 @@ export const MagicMove = props => {
     />
   )
 }
+
+const eventTitles = {
+  onTap: 'Tap',
+  onTapStart: 'Tap Start',
+  onTapCancel: 'Tap Cancel',
+  onHoverStart: 'Hover Start',
+  onHoverEnd: 'Hover End',
+}
+
+const eventNames = Object.keys(eventTitles)
+const isCanvas = RenderTarget.current() == RenderTarget.canvas
+const hasChildren = children => !!React.Children.count(children)
 
 addPropertyControls(MagicMove, {
   children: {
@@ -65,7 +62,7 @@ addPropertyControls(MagicMove, {
     title: '✦︎ Automatic',
   },
 
-  ...events.reduce((object, key) => {
+  ...eventNames.reduce((object, key) => {
     return {
       ...object,
       [key]: {

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useAnimation } from 'framer'
 import {
+  isFrame,
   normalizeRadius,
   normalizeBorder,
   normalizeShadow,
@@ -10,21 +11,19 @@ import { ConstraintValues } from './Constraints'
 
 let i = 0
 
-const RenderElement = props => {
+const _RenderElement = props => {
   const { element, isParent, parentSize } = props
+  const { children } = element.props
   const animation = useAnimation()
   const animatedProps = {}
   const animationList = props.animationList || {}
 
-  let { stop } = props
+  if (isFrame(element)) {
+    if (isParent) i = 0
 
-  if (isParent) i = 0
-  if (element.type.name != 'Frame') stop = true
+    const variants = props.states[i]
+    const initial = variants.children
 
-  const variants = props.states[i]
-  const initial = variants.children
-
-  if (!stop) {
     Object.keys(variants)
       .filter(variant => variant != 'children')
       .forEach(eventName => {
@@ -78,33 +77,30 @@ const RenderElement = props => {
       animationList.auto.forEach(animation => animation())
 
     animatedProps['animate'] = animation
-  }
 
-  i++
+    i++
+  }
 
   const elementSize = {
     width: element.props.constraints && element.props.constraints.width,
     height: element.props.constraints && element.props.constraints.height,
   }
 
-  const { children } = element.props
-
   return React.cloneElement(
     element,
     animatedProps,
-    stop
+    !isFrame(element)
       ? children
       : React.Children.map(children, child => (
-          <RenderElement
+          <_RenderElement
             element={child}
             states={props.states}
             animationList={animationList}
             isParent={false}
             parentSize={elementSize}
-            stop={stop}
           />
         ))
   )
 }
 
-export const RenderElements = RenderElement
+export const RenderElement = _RenderElement
