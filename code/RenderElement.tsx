@@ -29,12 +29,17 @@ const _RenderElement = props => {
       .forEach(eventName => {
         const event = variants[eventName]
 
-        if (!animationList[eventName]) animationList[eventName] = []
-
         const constraints = ConstraintValues.toRect(
           ConstraintValues.fromProperties(event.constraints),
           event.parentSize
         )
+
+        const constraintStyles = {
+          width: constraints.width,
+          height: constraints.height,
+          top: constraints.y,
+          left: constraints.x,
+        }
 
         animatedProps['initial'] = {
           borderRadius: normalizeRadius(initial.style.borderRadius),
@@ -43,7 +48,7 @@ const _RenderElement = props => {
           boxShadow: normalizeShadow(initial.style.boxShadow),
         }
 
-        let eventStyles = {
+        const eventStyles = {
           rotate: event.style.rotate,
           opacity:
             event.style.opacity != undefined ? event.style.opacity : 1,
@@ -51,20 +56,10 @@ const _RenderElement = props => {
           backgroundColor: normalizeColor(event.style.backgroundColor),
           border: normalizeBorder(event._border),
           boxShadow: normalizeShadow(event.style.boxShadow),
+          ...(!isParent && constraintStyles),
         }
 
-        if (!isParent) {
-          eventStyles = {
-            ...eventStyles,
-            ...{
-              width: constraints.width,
-              height: constraints.height,
-              top: constraints.y,
-              left: constraints.x,
-            },
-          }
-        }
-
+        if (!animationList[eventName]) animationList[eventName] = []
         animationList[eventName].push(() => animation.start(eventStyles))
 
         if (isParent) {
@@ -79,11 +74,6 @@ const _RenderElement = props => {
     animatedProps['animate'] = animation
 
     i++
-  }
-
-  const elementSize = {
-    width: element.props.constraints && element.props.constraints.width,
-    height: element.props.constraints && element.props.constraints.height,
   }
 
   return React.cloneElement(
