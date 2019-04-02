@@ -1,12 +1,7 @@
 import * as React from 'react'
 import { useAnimation } from 'framer'
-import {
-  isFrame,
-  normalizeRadius,
-  normalizeBorder,
-  normalizeShadow,
-  normalizeColor,
-} from './utils.js'
+import { isFrame } from './utils.js'
+import { get } from './processValues.js'
 import { ConstraintValues } from './Constraints'
 
 let i = 0
@@ -42,20 +37,20 @@ const _RenderElement = props => {
         }
 
         animatedProps['initial'] = {
-          borderRadius: normalizeRadius(initial.style.borderRadius),
-          backgroundColor: normalizeColor(initial.style.backgroundColor),
-          border: normalizeBorder(initial._border),
-          boxShadow: normalizeShadow(initial.style.boxShadow),
+          borderRadius: get.radius(initial.style.borderRadius),
+          backgroundColor: get.color(initial.style.backgroundColor),
+          border: get.border(initial._border),
+          boxShadow: get.shadow(initial.style.boxShadow),
         }
 
         const eventStyles = {
           rotate: event.style.rotate,
           opacity:
             event.style.opacity != undefined ? event.style.opacity : 1,
-          borderRadius: normalizeRadius(event.style.borderRadius),
-          backgroundColor: normalizeColor(event.style.backgroundColor),
-          border: normalizeBorder(event._border),
-          boxShadow: normalizeShadow(event.style.boxShadow),
+          borderRadius: get.radius(event.style.borderRadius),
+          backgroundColor: get.color(event.style.backgroundColor),
+          border: get.border(event._border),
+          boxShadow: get.shadow(event.style.boxShadow),
           ...(!isParent && constraintStyles),
         }
 
