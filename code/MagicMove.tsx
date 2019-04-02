@@ -9,14 +9,17 @@ export const MagicMove = props => {
   const { width, height, children } = props
   const [elements, setElements] = useState({})
 
-  const sources = eventNames
-    .concat(['children', 'auto'])
-    .map(source => ({ name: source, element: props[source][0] }))
+  const sources = variantNames.map(source => ({
+    name: source,
+    element: props[source][0],
+  }))
 
   let hasEvents = false
-  eventNames.concat('auto').forEach(event => {
-    if (hasChildren(props[event])) hasEvents = true
-  })
+  Object.keys(events)
+    .concat('auto')
+    .forEach(event => {
+      if (hasChildren(props[event])) hasEvents = true
+    })
 
   useEffect(() => {
     getElements(sources, setElements)
@@ -26,7 +29,12 @@ export const MagicMove = props => {
     isCanvas || Object.keys(elements).length == 0 ? (
       children
     ) : (
-      <RenderElement element={children[0]} states={elements} isParent />
+      <RenderElement
+        element={children[0]}
+        states={elements}
+        transition={props}
+        isParent
+      />
     )
   ) : (
     <EmptyState
@@ -37,7 +45,7 @@ export const MagicMove = props => {
   )
 }
 
-const eventTitles = {
+const events = {
   onTap: 'Tap',
   onTapStart: 'Tap Start',
   onTapCancel: 'Tap Cancel',
@@ -45,101 +53,228 @@ const eventTitles = {
   onHoverEnd: 'Hover End',
 }
 
-const eventNames = Object.keys(eventTitles)
+const specialVariants = { children: 'Initial', auto: 'Automatic' }
+const variantTitles = { ...specialVariants, ...events }
+const variantNames = Object.keys(variantTitles)
+
 const isCanvas = RenderTarget.current() == RenderTarget.canvas
 const hasChildren = children => !!React.Children.count(children)
 
 addPropertyControls(MagicMove, {
-  children: {
-    type: ControlType.ComponentInstance,
-    title: 'Initial',
-  },
-
-  auto: {
-    type: ControlType.Array,
-    propertyControl: { type: ControlType.ComponentInstance },
-    maxCount: 1,
-    title: '✦︎ Automatic',
-  },
-
-  ...eventNames.reduce((object, key) => {
+  ...variantNames.reduce((object, key) => {
     return {
       ...object,
       [key]: {
         type: ControlType.Array,
         propertyControl: { type: ControlType.ComponentInstance },
         maxCount: 1,
-        title: '✦ ' + eventTitles[key],
+        title: variantTitles[key],
       },
     }
   }, {}),
 
-  easing: {
+  transition: {
+    title: 'Transition',
     type: ControlType.Enum,
-    title: 'Easing',
-    options: [
-      'spring',
-      'bezier',
-      'linear',
-      'ease',
-      'easeIn',
-      'easeOut',
-      'easeInOut',
-    ],
-    optionTitles: [
-      'Spring',
-      'Bézier curve',
-      'Linear',
-      'Ease',
-      'Ease-in',
-      'Ease-out',
-      'Ease-in-out',
-    ],
-  },
+    options: ['spring', 'tween'],
+    optionTitles: ['Spring', 'Tween'],
 
-  tension: {
-    type: ControlType.Number,
-    title: 'Tension',
-    max: 1000,
-    hidden(props) {
-      return props.easing != 'spring'
-    },
-  },
-
-  friction: {
-    type: ControlType.Number,
-    title: 'Friction',
-    hidden(props) {
-      return props.easing != 'spring'
-    },
-  },
-
-  duration: {
-    type: ControlType.Number,
-    title: 'Duration',
-    max: 10,
-    step: 0.1,
-    hidden(props) {
-      return props.easing == 'spring'
-    },
-  },
-
-  curve: {
-    type: ControlType.String,
-    title: 'Curve',
-    hidden(props) {
-      return props.easing != 'bezier'
-    },
+    defaultValue: 'spring',
   },
 
   delay: {
-    type: ControlType.Number,
     title: 'Delay',
-    max: 10,
+    type: ControlType.Number,
     step: 0.1,
+    displayStepper: true,
+
+    defaultValue: 0,
+  },
+
+  duration: {
+    title: 'Duration',
+    type: ControlType.Number,
+    step: 0.1,
+    displayStepper: true,
+
     hidden(props) {
-      return props.auto.length == 0
+      return props.transition != 'tween'
     },
+
+    defaultValue: 0.3,
+  },
+
+  damping: {
+    title: 'Damping',
+    type: ControlType.Number,
+
+    hidden(props) {
+      return props.transition != 'spring'
+    },
+
+    defaultValue: 10,
+  },
+
+  mass: {
+    title: 'Mass',
+    type: ControlType.Number,
+    step: 0.1,
+
+    hidden(props) {
+      return props.transition != 'spring'
+    },
+
+    defaultValue: 1,
+  },
+
+  stiffness: {
+    title: 'Stiffness',
+    type: ControlType.Number,
+
+    hidden(props) {
+      return props.transition != 'spring'
+    },
+
+    defaultValue: 100,
+  },
+
+  velocity: {
+    title: 'Velocity',
+    type: ControlType.Number,
+
+    hidden(props) {
+      return props.transition != 'spring'
+    },
+
+    defaultValue: 1,
+  },
+
+  ease: {
+    title: 'Easing',
+    type: ControlType.Enum,
+    options: [
+      'custom',
+      'linear',
+      'easeIn',
+      'easeOut',
+      'easeInOut',
+      'circIn',
+      'circOut',
+      'circInOut',
+      'backIn',
+      'backOut',
+      'backInOut',
+      'anticipate',
+    ],
+    optionTitles: [
+      'Custom',
+      'linear',
+      'easeIn',
+      'easeOut',
+      'easeInOut',
+      'circIn',
+      'circOut',
+      'circInOut',
+      'backIn',
+      'backOut',
+      'backInOut',
+      'anticipate',
+    ],
+
+    hidden(props) {
+      return props.transition != 'tween'
+    },
+
+    defaultValue: 'linear',
+  },
+
+  customEase: {
+    title: 'Custom',
+    type: ControlType.String,
+
+    hidden(props) {
+      return props.transition != 'tween' || props.ease != 'custom'
+    },
+
+    defaultValue: '0.25, 0.1, 0.25, 1',
+  },
+
+  animate: {
+    title: 'Animate',
+    type: ControlType.SegmentedEnum,
+    options: ['once', 'repeat'],
+    optionTitles: ['Once', 'Repeat'],
+
+    defaultValue: 'once',
+  },
+
+  repeat: {
+    title: 'Repeat',
+    type: ControlType.SegmentedEnum,
+    options: ['loop', 'yoyo', 'flip'],
+    optionTitles: ['Loop', 'Yoyo', 'Flip'],
+
+    hidden(props) {
+      return props.animate != 'repeat'
+    },
+
+    defaultValue: 'loop',
+  },
+
+  loop: {
+    title: 'Loop',
+    type: ControlType.SegmentedEnum,
+    options: ['number', 'infinity'],
+    optionTitles: ['Number', 'Infinity'],
+
+    hidden(props) {
+      return props.animate != 'repeat' || props.repeat != 'loop'
+    },
+
+    defaultValue: 'infinity',
+  },
+
+  yoyo: {
+    title: 'Yoyo',
+    type: ControlType.SegmentedEnum,
+    options: ['number', 'infinity'],
+    optionTitles: ['Number', 'Infinity'],
+
+    hidden(props) {
+      return props.animate != 'repeat' || props.repeat != 'yoyo'
+    },
+
+    defaultValue: 'infinity',
+  },
+
+  flip: {
+    title: 'Flip',
+    type: ControlType.SegmentedEnum,
+    options: ['number', 'infinity'],
+    optionTitles: ['Number', 'Infinity'],
+
+    hidden(props) {
+      return props.animate != 'repeat' || props.repeat != 'flip'
+    },
+
+    defaultValue: 'infinity',
+  },
+
+  times: {
+    title: 'Times',
+    type: ControlType.Number,
+    displayStepper: true,
+
+    hidden(props) {
+      return (
+        props.animate != 'repeat' ||
+        (props.repeat == 'loop' && props.loop != 'number') ||
+        (props.repeat == 'yoyo' && props.yoyo != 'number') ||
+        (props.repeat == 'flip' && props.flip != 'number')
+      )
+    },
+
+    defaultValue: 5,
   },
 })
 
@@ -152,5 +287,5 @@ MagicMove.defaultProps = {
   tension: 550,
   friction: 25,
   curve: '0.25, 0.1, 0.25, 1',
-  duration: 0.4,
+  // duration: 0.4,
 }

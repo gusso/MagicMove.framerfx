@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { useAnimation } from 'framer'
-import { isFrame } from './utils.js'
-import { get } from './processValues.js'
+import { isFrame } from './utils'
+import { get } from './processValues'
 import { ConstraintValues } from './Constraints'
 
 let i = 0
 
 const _RenderElement = props => {
-  const { element, isParent } = props
+  const { element, isParent, transition } = props
   const { children } = element.props
   const animation = useAnimation()
   const animatedProps = {}
@@ -67,6 +67,19 @@ const _RenderElement = props => {
       animationList.auto.forEach(animation => animation())
 
     animatedProps['animate'] = animation
+    animatedProps['transition'] = {
+      type: transition.transition,
+      duration: transition.duration,
+      delay: transition.delay,
+      ease: transition.ease,
+      loop: transition.loop,
+      yoyo: transition.yoyo == 'infinity' && Infinity,
+      flip: transition.flip,
+      damping: transition.damping,
+      mass: transition.mass,
+      stiffness: transition.stiffness,
+      velocity: transition.velocity,
+    }
 
     i++
   }
@@ -81,6 +94,7 @@ const _RenderElement = props => {
             element={child}
             states={props.states}
             animationList={animationList}
+            transition={transition}
             isParent={false}
           />
         ))
