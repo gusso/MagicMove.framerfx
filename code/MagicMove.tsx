@@ -13,14 +13,14 @@ export const MagicMove = props => {
     .concat(['children', 'auto'])
     .map(source => ({ name: source, element: props[source][0] }))
 
-  useEffect(() => {
-    getElements(sources, setElements)
-  }, [...sources.map(source => source.element)])
-
   let hasEvents = false
   eventNames.concat('auto').forEach(event => {
     if (hasChildren(props[event])) hasEvents = true
   })
+
+  useEffect(() => {
+    getElements(sources, setElements)
+  }, [...sources.map(source => source.element)])
 
   return hasChildren(children) && hasEvents ? (
     isCanvas || Object.keys(elements).length == 0 ? (

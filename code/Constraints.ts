@@ -1,19 +1,6 @@
 import { Rect, Animatable, Size } from 'framer'
 import { isFiniteNumber } from './isFiniteNumber'
 
-export const constraintDefaults = {
-  left: null,
-  right: null,
-  top: null,
-  bottom: null,
-  centerX: '50%',
-  centerY: '50%',
-  aspectRatio: null,
-  parentSize: null,
-  width: 100,
-  height: 100,
-}
-
 export enum DimensionType {
   FixedNumber,
   Percentage,
@@ -176,63 +163,6 @@ export namespace ConstraintValues {
     }
   }
 
-  export const toSize = (
-    values,
-    parentSize: Size | null | undefined,
-    autoSize: Size | null,
-    freeSpace: null
-  ): Size => {
-    let width: number | null = null
-    let height: number | null = null
-
-    const parentWidth = parentSize
-      ? Animatable.getNumber(parentSize.width)
-      : null
-    const parentHeight = parentSize
-      ? Animatable.getNumber(parentSize.height)
-      : null
-
-    const hOpposingPinsOffset = pinnedOffset(values.left, values.right)
-
-    if (parentWidth && isFiniteNumber(hOpposingPinsOffset)) {
-      width = parentWidth - hOpposingPinsOffset
-    } else if (autoSize && values.widthType === DimensionType.Auto) {
-      width = autoSize.width
-    } else if (isFiniteNumber(values.width)) {
-      switch (values.widthType) {
-        case DimensionType.FixedNumber:
-          width = values.width
-          break
-        case DimensionType.Percentage:
-          if (parentWidth) {
-            width = parentWidth * values.width
-          }
-          break
-      }
-    }
-
-    const vOpposingPinsOffset = pinnedOffset(values.top, values.bottom)
-
-    if (parentHeight && isFiniteNumber(vOpposingPinsOffset)) {
-      height = parentHeight - vOpposingPinsOffset
-    } else if (autoSize && values.heightType === DimensionType.Auto) {
-      height = autoSize.height
-    } else if (isFiniteNumber(values.height)) {
-      switch (values.heightType) {
-        case DimensionType.FixedNumber:
-          height = values.height
-          break
-        case DimensionType.Percentage:
-          if (parentHeight) {
-            height = parentHeight * values.height
-          }
-          break
-      }
-    }
-
-    return sizeAfterApplyingDefaultsAndAspectRatio(width, height, values)
-  }
-
   export const toRect = (
     values,
     parentSize: Size | null,
@@ -345,14 +275,4 @@ function sizeAfterApplyingDefaultsAndAspectRatio(
 function pinnedOffset(start: number | null, end: number | null) {
   if (!isFiniteNumber(start) || !isFiniteNumber(end)) return null
   return start + end
-}
-
-export function getMergedConstraintsProps(props, constraints): any {
-  const result: any = {}
-  if (props.constraints) {
-    result.constraints = { ...props.constraints, ...constraints }
-  } else {
-    Object.assign(result, constraints)
-  }
-  return result
 }

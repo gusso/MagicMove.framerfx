@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Frame, Size } from 'framer'
+import { Frame } from 'framer'
 
 const color = '136, 85, 255'
 
@@ -13,7 +13,7 @@ const _EmptyState = ({ size, initial, event }) => {
   const shouldShowArrow = hasAvailableHeight && width >= arrowWidth + 6
   const shouldShowTitle = hasAvailableHeight && shouldShowArrow
 
-  const Title: React.SFC = ({ children }) => (
+  const Title = ({ children }) => (
     <span
       style={{
         flex: 'auto',
@@ -29,10 +29,7 @@ const _EmptyState = ({ size, initial, event }) => {
     </span>
   )
 
-  const ChildType: React.SFC<{ connected: boolean }> = ({
-    children,
-    connected = false,
-  }) => (
+  const ChildType = ({ children, connected = false }) => (
     <span
       style={{
         padding: `2px 5px 3px`,
