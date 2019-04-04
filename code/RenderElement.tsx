@@ -66,15 +66,28 @@ const _RenderElement = props => {
     if ('auto' in variants)
       animationList.auto.forEach(animation => animation())
 
+    const repeat = transition.animate == 'repeat'
+
     animatedProps['animate'] = animation
     animatedProps['transition'] = {
       type: transition.transition,
-      duration: transition.duration,
       delay: transition.delay,
+
+      // Tween props
+      duration: transition.duration,
       ease: transition.ease,
-      loop: transition.loop,
-      yoyo: transition.yoyo == 'infinity' && Infinity,
-      flip: transition.flip,
+      loop:
+        repeat &&
+        transition.repeat == 'loop' &&
+        (transition.loop == 'infinity' ? Infinity : transition.times),
+      yoyo:
+        repeat &&
+        transition.repeat == 'yoyo' &&
+        (transition.yoyo == 'infinity' ? Infinity : transition.times),
+      flip:
+        repeat &&
+        transition.repeat == 'flip' &&
+        (transition.flip == 'infinity' ? Infinity : transition.times),
       damping: transition.damping,
       mass: transition.mass,
       stiffness: transition.stiffness,

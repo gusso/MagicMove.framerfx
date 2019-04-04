@@ -205,6 +205,10 @@ addPropertyControls(MagicMove, {
     options: ['once', 'repeat'],
     optionTitles: ['Once', 'Repeat'],
 
+    hidden(props) {
+      return props.transition != 'tween'
+    },
+
     defaultValue: 'once',
   },
 
@@ -215,7 +219,7 @@ addPropertyControls(MagicMove, {
     optionTitles: ['Loop', 'Yoyo', 'Flip'],
 
     hidden(props) {
-      return props.animate != 'repeat'
+      return props.transition != 'tween' || props.animate != 'repeat'
     },
 
     defaultValue: 'loop',
@@ -228,7 +232,11 @@ addPropertyControls(MagicMove, {
     optionTitles: ['Number', 'Infinity'],
 
     hidden(props) {
-      return props.animate != 'repeat' || props.repeat != 'loop'
+      return (
+        props.transition != 'tween' ||
+        props.animate != 'repeat' ||
+        props.repeat != 'loop'
+      )
     },
 
     defaultValue: 'infinity',
@@ -241,7 +249,11 @@ addPropertyControls(MagicMove, {
     optionTitles: ['Number', 'Infinity'],
 
     hidden(props) {
-      return props.animate != 'repeat' || props.repeat != 'yoyo'
+      return (
+        props.transition != 'tween' ||
+        props.animate != 'repeat' ||
+        props.repeat != 'yoyo'
+      )
     },
 
     defaultValue: 'infinity',
@@ -254,7 +266,11 @@ addPropertyControls(MagicMove, {
     optionTitles: ['Number', 'Infinity'],
 
     hidden(props) {
-      return props.animate != 'repeat' || props.repeat != 'flip'
+      return (
+        props.transition != 'tween' ||
+        props.animate != 'repeat' ||
+        props.repeat != 'flip'
+      )
     },
 
     defaultValue: 'infinity',
@@ -267,6 +283,7 @@ addPropertyControls(MagicMove, {
 
     hidden(props) {
       return (
+        props.transition != 'tween' ||
         props.animate != 'repeat' ||
         (props.repeat == 'loop' && props.loop != 'number') ||
         (props.repeat == 'yoyo' && props.yoyo != 'number') ||
