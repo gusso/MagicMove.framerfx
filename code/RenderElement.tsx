@@ -88,6 +88,8 @@ const _RenderElement = props => {
         repeat &&
         transition.repeat == 'flip' &&
         (transition.flip == 'infinity' ? Infinity : transition.times),
+
+      // Spring props
       damping: transition.damping,
       mass: transition.mass,
       stiffness: transition.stiffness,
