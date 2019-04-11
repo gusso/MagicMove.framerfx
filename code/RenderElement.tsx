@@ -74,6 +74,11 @@ const _RenderElement = props => {
       type: transition.transition,
       delay: transition.delay,
 
+      // Spring props
+      damping: transition.damping,
+      mass: transition.mass,
+      stiffness: transition.stiffness,
+
       // Tween props
       duration: transition.duration,
       ease: transition.ease,
@@ -89,11 +94,6 @@ const _RenderElement = props => {
         repeat &&
         transition.repeat == 'flip' &&
         (transition.flip == 'infinity' ? Infinity : times),
-
-      // Spring props
-      damping: transition.damping,
-      mass: transition.mass,
-      stiffness: transition.stiffness,
     }
 
     i++
