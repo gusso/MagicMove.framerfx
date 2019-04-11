@@ -91,19 +91,6 @@ addPropertyControls(MagicMove, {
     defaultValue: 0,
   },
 
-  duration: {
-    title: 'Duration',
-    type: ControlType.Number,
-    step: 0.1,
-    displayStepper: true,
-
-    hidden(props) {
-      return props.transition != 'tween'
-    },
-
-    defaultValue: 0.3,
-  },
-
   damping: {
     title: 'Damping',
     type: ControlType.Number,
@@ -139,6 +126,19 @@ addPropertyControls(MagicMove, {
     },
 
     defaultValue: 700,
+  },
+
+  duration: {
+    title: 'Duration',
+    type: ControlType.Number,
+    step: 0.1,
+    displayStepper: true,
+
+    hidden(props) {
+      return props.transition != 'tween'
+    },
+
+    defaultValue: 0.3,
   },
 
   ease: {
@@ -290,11 +290,4 @@ addPropertyControls(MagicMove, {
 MagicMove.defaultProps = {
   width: 400,
   height: 400,
-  // animate: 'events',
-  // delay: 0,
-  // easing: 'spring',
-  // tension: 550,
-  // friction: 25,
-  // curve: '0.25, 0.1, 0.25, 1',
-  // duration: 0.4,
 }
