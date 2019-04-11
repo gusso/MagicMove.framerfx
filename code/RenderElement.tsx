@@ -93,7 +93,6 @@ const _RenderElement = props => {
       damping: transition.damping,
       mass: transition.mass,
       stiffness: transition.stiffness,
-      velocity: transition.velocity,
     }
 
     i++

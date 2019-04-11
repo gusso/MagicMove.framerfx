@@ -107,18 +107,20 @@ addPropertyControls(MagicMove, {
   damping: {
     title: 'Damping',
     type: ControlType.Number,
+    max: 300,
 
     hidden(props) {
       return props.transition != 'spring'
     },
 
-    defaultValue: 10,
+    defaultValue: 35,
   },
 
   mass: {
     title: 'Mass',
     type: ControlType.Number,
     step: 0.1,
+    max: 5,
 
     hidden(props) {
       return props.transition != 'spring'
@@ -130,23 +132,13 @@ addPropertyControls(MagicMove, {
   stiffness: {
     title: 'Stiffness',
     type: ControlType.Number,
+    max: 1000,
 
     hidden(props) {
       return props.transition != 'spring'
     },
 
-    defaultValue: 100,
-  },
-
-  velocity: {
-    title: 'Velocity',
-    type: ControlType.Number,
-
-    hidden(props) {
-      return props.transition != 'spring'
-    },
-
-    defaultValue: 1,
+    defaultValue: 700,
   },
 
   ease: {
@@ -296,13 +288,13 @@ addPropertyControls(MagicMove, {
 })
 
 MagicMove.defaultProps = {
-  width: 275,
-  height: 220,
-  animate: 'events',
-  delay: 0,
-  easing: 'spring',
-  tension: 550,
-  friction: 25,
-  curve: '0.25, 0.1, 0.25, 1',
+  width: 400,
+  height: 400,
+  // animate: 'events',
+  // delay: 0,
+  // easing: 'spring',
+  // tension: 550,
+  // friction: 25,
+  // curve: '0.25, 0.1, 0.25, 1',
   // duration: 0.4,
 }
