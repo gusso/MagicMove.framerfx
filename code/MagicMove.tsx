@@ -291,7 +291,7 @@ addPropertyControls(MagicMove, {
       )
     },
 
-    defaultValue: 5,
+    defaultValue: 2,
   },
 })
 
