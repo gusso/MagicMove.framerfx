@@ -81,7 +81,10 @@ const _RenderElement = props => {
 
       // Tween props
       duration: transition.duration,
-      ease: transition.ease,
+      ease:
+        transition.ease == 'custom'
+          ? transition.customEase.split(',')
+          : transition.ease,
       loop:
         repeat &&
         transition.repeat == 'loop' &&
