@@ -67,7 +67,7 @@ const _RenderElement = props => {
       animationList.auto.forEach(animation => animation())
 
     const repeat = transition.animate == 'repeat'
-    const times = transition.times - 1
+    const count = transition.count - 1
 
     animatedProps['animate'] = animation
     animatedProps['transition'] = {
@@ -88,15 +88,15 @@ const _RenderElement = props => {
       loop:
         repeat &&
         transition.repeat == 'loop' &&
-        (transition.loop == 'infinity' ? Infinity : times),
+        (transition.loop == 'infinity' ? Infinity : count),
       yoyo:
         repeat &&
         transition.repeat == 'yoyo' &&
-        (transition.yoyo == 'infinity' ? Infinity : times),
+        (transition.yoyo == 'infinity' ? Infinity : count),
       flip:
         repeat &&
         transition.repeat == 'flip' &&
-        (transition.flip == 'infinity' ? Infinity : times),
+        (transition.flip == 'infinity' ? Infinity : count),
     }
 
     i++

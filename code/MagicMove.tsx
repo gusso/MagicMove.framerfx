@@ -220,8 +220,8 @@ addPropertyControls(MagicMove, {
   loop: {
     title: 'Loop',
     type: ControlType.SegmentedEnum,
-    options: ['number', 'infinity'],
-    optionTitles: ['Number', 'Infinity'],
+    options: ['count', 'infinity'],
+    optionTitles: ['Count', 'Infinity'],
 
     hidden(props) {
       return (
@@ -237,8 +237,8 @@ addPropertyControls(MagicMove, {
   yoyo: {
     title: 'Yoyo',
     type: ControlType.SegmentedEnum,
-    options: ['number', 'infinity'],
-    optionTitles: ['Number', 'Infinity'],
+    options: ['count', 'infinity'],
+    optionTitles: ['Count', 'Infinity'],
 
     hidden(props) {
       return (
@@ -254,8 +254,8 @@ addPropertyControls(MagicMove, {
   flip: {
     title: 'Flip',
     type: ControlType.SegmentedEnum,
-    options: ['number', 'infinity'],
-    optionTitles: ['Number', 'Infinity'],
+    options: ['count', 'infinity'],
+    optionTitles: ['Count', 'Infinity'],
 
     hidden(props) {
       return (
@@ -268,18 +268,19 @@ addPropertyControls(MagicMove, {
     defaultValue: 'infinity',
   },
 
-  times: {
-    title: 'Times',
+  count: {
+    title: 'Count',
     type: ControlType.Number,
     displayStepper: true,
+    min: 1,
 
     hidden(props) {
       return (
         props.transition != 'tween' ||
         props.animate != 'repeat' ||
-        (props.repeat == 'loop' && props.loop != 'number') ||
-        (props.repeat == 'yoyo' && props.yoyo != 'number') ||
-        (props.repeat == 'flip' && props.flip != 'number')
+        (props.repeat == 'loop' && props.loop != 'count') ||
+        (props.repeat == 'yoyo' && props.yoyo != 'count') ||
+        (props.repeat == 'flip' && props.flip != 'count')
       )
     },
 
