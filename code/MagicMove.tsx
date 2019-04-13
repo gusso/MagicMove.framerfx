@@ -11,12 +11,12 @@ export const MagicMove = props => {
 
   const sources = variantNames.map(source => ({
     name: source,
-    element: props[source][0],
+    elements: props[source],
   }))
 
   useEffect(() => {
     getElements(sources, setElements)
-  }, [...sources.map(source => source.element)])
+  }, [...sources.map(source => source.elements)])
 
   let hasEvents = false
   Object.keys(events)
@@ -67,7 +67,7 @@ addPropertyControls(MagicMove, {
       [key]: {
         type: ControlType.Array,
         propertyControl: { type: ControlType.ComponentInstance },
-        maxCount: 1,
+        maxCount: key == 'children' || key == 'auto' ? 1 : null,
         title: variantTitles[key],
       },
     }

@@ -17,12 +17,12 @@ const _RenderElement = props => {
     if (isParent) i = 0
 
     const variants = props.states[i]
-    const initial = variants.children
+    const initial = variants.children[0]
 
     Object.keys(variants)
       .filter(variant => variant != 'children')
       .forEach(eventName => {
-        const event = variants[eventName]
+        const event = variants[eventName][0]
 
         const constraints = ConstraintValues.toRect(
           ConstraintValues.fromProperties(event.constraints),

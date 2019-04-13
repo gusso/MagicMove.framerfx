@@ -1,9 +1,8 @@
 import { isFrame } from './utils'
 
-let i = 0
-
 export const getElements = (sources, setElements) => {
   const elements = {}
+  let i = 0
 
   const addElementProps = (
     element,
@@ -17,7 +16,8 @@ export const getElements = (sources, setElements) => {
       if (isParent) i = 0
 
       if (!elements[i]) elements[i] = {}
-      elements[i][source] = { ...element.props, parentSize }
+      if (!elements[i][source]) elements[i][source] = []
+      elements[i][source].push({ ...element.props, parentSize })
       i++
 
       if (children.length)
@@ -28,7 +28,10 @@ export const getElements = (sources, setElements) => {
   }
 
   sources.forEach(source => {
-    if (!!source.element) addElementProps(source.element, source.name, true)
+    if (!!source.elements.length)
+      source.elements.forEach(element => {
+        addElementProps(element, source.name, true)
+      })
   })
 
   setElements(elements)
