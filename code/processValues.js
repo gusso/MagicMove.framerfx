@@ -9,7 +9,9 @@ export const get = {
 }
 
 const opacity = opacity => {
-  if (opacity == undefined) return 1
+  if (opacity == undefined) {
+    return 1
+  }
 
   return opacity
 }
@@ -29,12 +31,12 @@ const radius = radius => {
 }
 
 const shadow = shadows => {
-  if (shadows == undefined)
+  if (shadows == undefined) {
     return Array(4)
       .fill('0px')
       .concat('rgba(0,0,0,0)')
       .join(' ')
-  else {
+  } else {
     const shadowArray = shadows.split(/, (?=[0-9]+px)/)
     const newShadows = []
 
@@ -53,8 +55,9 @@ const shadow = shadows => {
 }
 
 const border = border => {
-  if (Object.entries(border).length == 0)
+  if (Object.entries(border).length == 0) {
     return `0px solid ${color('transparent')}`
+  }
 
   return `${border.borderWidth}px ${border.borderStyle} ${color(
     border.borderColor
@@ -62,7 +65,9 @@ const border = border => {
 }
 
 const color = color => {
-  if (color == undefined) return Color.toString(Color('transparent'))
+  if (color == undefined) {
+    return Color.toString(Color('transparent'))
+  }
 
   return Color.toString(Color(color))
 }

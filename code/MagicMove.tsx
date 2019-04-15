@@ -177,7 +177,7 @@ addPropertyControls(MagicMove, {
       return props.transition != 'tween'
     },
 
-    defaultValue: 'linear',
+    defaultValue: 'easeOut',
   },
 
   customEase: {
