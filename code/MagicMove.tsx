@@ -67,10 +67,10 @@ addPropertyControls(MagicMove, {
     return {
       ...object,
       [key]: {
+        title: variantTitles[key],
         type: ControlType.Array,
         propertyControl: { type: ControlType.ComponentInstance },
         maxCount: key == 'children' || key == 'auto' ? 1 : null,
-        title: variantTitles[key],
       },
     }
   }, {}),
