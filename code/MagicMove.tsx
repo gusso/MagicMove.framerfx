@@ -75,31 +75,78 @@ addPropertyControls(MagicMove, {
     }
   }, {}),
 
+  options: {
+    title: 'Options',
+    type: ControlType.SegmentedEnum,
+    options: ['transition', 'timing'],
+    optionTitles: ['Transition', 'Timing'],
+
+    defaultValue: 'transition',
+  },
+
+  delay: {
+    title: 'Delay All',
+    type: ControlType.Number,
+    step: 0.1,
+    min: 0,
+    displayStepper: true,
+
+    hidden(props) {
+      return props.options != 'timing'
+    },
+
+    defaultValue: 0,
+  },
+
+  delayChildren: {
+    title: 'Delay Child',
+    type: ControlType.Number,
+    step: 0.05,
+    min: 0,
+    displayStepper: true,
+
+    hidden(props) {
+      return props.options != 'timing'
+    },
+
+    defaultValue: 0,
+  },
+
+  staggerChildren: {
+    title: 'Stagger',
+    type: ControlType.Number,
+    step: 0.05,
+    min: 0,
+    displayStepper: true,
+
+    hidden(props) {
+      return props.options != 'timing'
+    },
+
+    defaultValue: 0,
+  },
+
   transition: {
     title: 'Transition',
     type: ControlType.Enum,
     options: ['spring', 'tween'],
     optionTitles: ['Spring', 'Tween'],
 
+    hidden(props) {
+      return props.options != 'transition'
+    },
+
     defaultValue: 'spring',
-  },
-
-  delay: {
-    title: 'Delay',
-    type: ControlType.Number,
-    step: 0.1,
-    displayStepper: true,
-
-    defaultValue: 0,
   },
 
   damping: {
     title: 'Damping',
     type: ControlType.Number,
+    min: 0,
     max: 300,
 
     hidden(props) {
-      return props.transition != 'spring'
+      return props.options != 'transition' || props.transition != 'spring'
     },
 
     defaultValue: 35,
@@ -109,10 +156,11 @@ addPropertyControls(MagicMove, {
     title: 'Mass',
     type: ControlType.Number,
     step: 0.1,
+    min: 0,
     max: 5,
 
     hidden(props) {
-      return props.transition != 'spring'
+      return props.options != 'transition' || props.transition != 'spring'
     },
 
     defaultValue: 1,
@@ -121,10 +169,11 @@ addPropertyControls(MagicMove, {
   stiffness: {
     title: 'Stiffness',
     type: ControlType.Number,
+    min: 0,
     max: 1000,
 
     hidden(props) {
-      return props.transition != 'spring'
+      return props.options != 'transition' || props.transition != 'spring'
     },
 
     defaultValue: 700,
@@ -134,10 +183,11 @@ addPropertyControls(MagicMove, {
     title: 'Duration',
     type: ControlType.Number,
     step: 0.1,
+    min: 1,
     displayStepper: true,
 
     hidden(props) {
-      return props.transition != 'tween'
+      return props.options != 'transition' || props.transition != 'tween'
     },
 
     defaultValue: 0.3,
@@ -176,7 +226,7 @@ addPropertyControls(MagicMove, {
     ],
 
     hidden(props) {
-      return props.transition != 'tween'
+      return props.options != 'transition' || props.transition != 'tween'
     },
 
     defaultValue: 'easeOut',
@@ -187,7 +237,11 @@ addPropertyControls(MagicMove, {
     type: ControlType.String,
 
     hidden(props) {
-      return props.transition != 'tween' || props.ease != 'custom'
+      return (
+        props.options != 'transition' ||
+        props.transition != 'tween' ||
+        props.ease != 'custom'
+      )
     },
 
     defaultValue: '0.25, 0.1, 0.25, 1',
@@ -200,7 +254,7 @@ addPropertyControls(MagicMove, {
     optionTitles: ['Once', 'Repeat'],
 
     hidden(props) {
-      return props.transition != 'tween'
+      return props.options != 'transition' || props.transition != 'tween'
     },
 
     defaultValue: 'once',
@@ -213,7 +267,11 @@ addPropertyControls(MagicMove, {
     optionTitles: ['Loop', 'Yoyo', 'Flip'],
 
     hidden(props) {
-      return props.transition != 'tween' || props.animate != 'repeat'
+      return (
+        props.options != 'transition' ||
+        props.transition != 'tween' ||
+        props.animate != 'repeat'
+      )
     },
 
     defaultValue: 'loop',
@@ -227,6 +285,7 @@ addPropertyControls(MagicMove, {
 
     hidden(props) {
       return (
+        props.options != 'transition' ||
         props.transition != 'tween' ||
         props.animate != 'repeat' ||
         props.repeat != 'loop'
@@ -244,6 +303,7 @@ addPropertyControls(MagicMove, {
 
     hidden(props) {
       return (
+        props.options != 'transition' ||
         props.transition != 'tween' ||
         props.animate != 'repeat' ||
         props.repeat != 'yoyo'
@@ -261,6 +321,7 @@ addPropertyControls(MagicMove, {
 
     hidden(props) {
       return (
+        props.options != 'transition' ||
         props.transition != 'tween' ||
         props.animate != 'repeat' ||
         props.repeat != 'flip'
@@ -278,6 +339,7 @@ addPropertyControls(MagicMove, {
 
     hidden(props) {
       return (
+        props.options != 'transition' ||
         props.transition != 'tween' ||
         props.animate != 'repeat' ||
         (props.repeat == 'loop' && props.loop != 'count') ||

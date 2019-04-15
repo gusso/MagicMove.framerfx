@@ -25,6 +25,12 @@ const _RenderElement = propsSource => {
 
     const [currentCycle, cycle] = useCycle(...keys)
 
+    const runCycle = nextCycle => {
+      setTimeout(() => {
+        cycle(keys.indexOf(nextCycle))
+      }, transition.delay * 1000)
+    }
+
     keysSource.forEach(key => {
       variantsSource[key].forEach((variant, i) => {
         const constraints = ConstraintValues.toRect(
@@ -61,7 +67,7 @@ const _RenderElement = propsSource => {
             nextCycle = key + 0
           }
 
-          cycle(keys.indexOf(nextCycle))
+          runCycle(nextCycle)
         }
       }
     })
@@ -72,7 +78,7 @@ const _RenderElement = propsSource => {
 
     useEffect(() => {
       if (isParent && keys.includes('auto0')) {
-        cycle(keys.indexOf('auto0'))
+        runCycle('auto0')
       }
     }, [propsSource.variants])
 
@@ -81,7 +87,9 @@ const _RenderElement = propsSource => {
 
     props['transition'] = {
       type: transition.transition,
-      delay: transition.delay,
+
+      delayChildren: isParent && transition.delayChildren,
+      staggerChildren: isParent && transition.staggerChildren,
 
       damping: transition.damping,
       mass: transition.mass,
