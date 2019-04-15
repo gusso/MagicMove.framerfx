@@ -9,7 +9,7 @@ export const MagicMove = props => {
   const { width, height, children } = props
   const [elements, setElements] = useState({})
 
-  const sources = variantNames.map(source => ({
+  const sources = variantKeys.map(source => ({
     name: source,
     elements: props[source],
   }))
@@ -31,7 +31,7 @@ export const MagicMove = props => {
     ) : (
       <RenderElement
         element={children[0]}
-        states={elements}
+        variants={elements}
         transition={props}
         isParent
       />
@@ -55,13 +55,13 @@ const events = {
 
 const specialVariants = { children: 'Initial', auto: 'Automatic' }
 const variantTitles = { ...specialVariants, ...events }
-const variantNames = Object.keys(variantTitles)
+const variantKeys = Object.keys(variantTitles)
 
 const isCanvas = RenderTarget.current() == RenderTarget.canvas
 const hasChildren = children => !!React.Children.count(children)
 
 addPropertyControls(MagicMove, {
-  ...variantNames.reduce((object, key) => {
+  ...variantKeys.reduce((object, key) => {
     return {
       ...object,
       [key]: {

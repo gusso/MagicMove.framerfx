@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { useAnimation } from 'framer'
+import { useEffect } from 'react'
+import { useCycle } from 'framer'
 import { isFrame } from './utils'
 import { get } from './processValues'
 import { ConstraintValues } from './Constraints'
@@ -9,24 +10,26 @@ let i = 0
 const _RenderElement = props => {
   const { element, isParent, transition } = props
   const { children } = element.props
-  const animation = useAnimation()
   const animatedProps = {}
-  const animationList = props.animationList || {}
 
   if (isFrame(element)) {
     if (isParent) i = 0
 
-    const variants = props.states[i]
-    const initial = variants.children[0]
+    const variantsSource = props.variants[i]
+    const variants = {}
 
-    Object.keys(variants)
-      .filter(variant => variant != 'children')
-      .forEach(eventName => {
-        const event = variants[eventName][0]
+    const keysSource = Object.keys(variantsSource)
+    const keys = keysSource.reduce((array, variant) => {
+      return array.concat(variantsSource[variant].map((v, i) => variant + i))
+    }, [])
 
+    const [currentCycle, cycle] = useCycle(...keys)
+
+    keysSource.forEach(key => {
+      variantsSource[key].forEach((variant, i) => {
         const constraints = ConstraintValues.toRect(
-          ConstraintValues.fromProperties(event.constraints),
-          event.parentSize
+          ConstraintValues.fromProperties(variant.constraints),
+          variant.parentSize
         )
 
         const constraintStyles = {
@@ -36,50 +39,55 @@ const _RenderElement = props => {
           left: constraints.x,
         }
 
-        animatedProps['initial'] = {
-          borderRadius: get.radius(initial.style.borderRadius),
-          backgroundColor: get.color(initial.style.backgroundColor),
-          border: get.border(initial._border),
-          boxShadow: get.shadow(initial.style.boxShadow),
-        }
-
-        const eventStyles = {
-          rotate: event.style.rotate,
-          opacity:
-            event.style.opacity != undefined ? event.style.opacity : 1,
-          borderRadius: get.radius(event.style.borderRadius),
-          backgroundColor: get.color(event.style.backgroundColor),
-          border: get.border(event._border),
-          boxShadow: get.shadow(event.style.boxShadow),
+        variants[key + i] = {
+          opacity: get.opacity(variant.style.opacity),
+          rotate: variant.style.rotate,
+          borderRadius: get.radius(variant.style.borderRadius),
+          backgroundColor: get.color(variant.style.backgroundColor),
+          border: get.border(variant._border),
+          boxShadow: get.shadow(variant.style.boxShadow),
           ...(!isParent && constraintStyles),
-        }
-
-        if (!animationList[eventName]) animationList[eventName] = []
-        animationList[eventName].push(() => animation.start(eventStyles))
-
-        if (isParent) {
-          animatedProps[eventName] = () =>
-            animationList[eventName].forEach(animation => animation())
         }
       })
 
-    if ('auto' in variants)
-      animationList.auto.forEach(animation => animation())
+      if (isParent) {
+        animatedProps[key] = () => {
+          let nextCycle
+
+          if (currentCycle.includes(key)) {
+            nextCycle = key + (parseInt(currentCycle.split(key)[1]) + 1)
+            if (!keys.includes(nextCycle)) nextCycle = key + 0
+          } else {
+            nextCycle = key + 0
+          }
+
+          cycle(keys.indexOf(nextCycle))
+        }
+      }
+    })
+
+    animatedProps['variants'] = variants
+    animatedProps['initial'] = variants['children0']
+
+    if (isParent) {
+      animatedProps['animate'] = currentCycle
+    }
+
+    useEffect(() => {
+      if (isParent && keys.includes('auto0')) cycle(keys.indexOf('auto0'))
+    }, [props.variants])
 
     const repeat = transition.animate == 'repeat'
     const count = transition.count - 1
 
-    animatedProps['animate'] = animation
     animatedProps['transition'] = {
       type: transition.transition,
       delay: transition.delay,
 
-      // Spring props
       damping: transition.damping,
       mass: transition.mass,
       stiffness: transition.stiffness,
 
-      // Tween props
       duration: transition.duration,
       ease:
         transition.ease == 'custom'
@@ -110,8 +118,7 @@ const _RenderElement = props => {
       : React.Children.map(children, child => (
           <_RenderElement
             element={child}
-            states={props.states}
-            animationList={animationList}
+            variants={props.variants}
             transition={transition}
             isParent={false}
           />
