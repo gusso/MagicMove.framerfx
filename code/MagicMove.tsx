@@ -183,7 +183,7 @@ addPropertyControls(MagicMove, {
     title: 'Duration',
     type: ControlType.Number,
     step: 0.1,
-    min: 1,
+    min: 0,
     displayStepper: true,
 
     hidden(props) {
