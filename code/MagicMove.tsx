@@ -15,7 +15,7 @@ export const MagicMove = props => {
   }))
 
   useEffect(() => {
-    getElements(sources, setElements)
+    if (hasChildren(children)) getElements(sources, setElements)
   }, [...sources.map(source => source.elements)])
 
   let hasEvents = false

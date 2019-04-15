@@ -18,6 +18,7 @@ export const getElements = (sources, setElements) => {
       if (!elements[i]) elements[i] = {}
       if (!elements[i][source]) elements[i][source] = []
       elements[i][source].push({ ...element.props, parentSize })
+
       i++
 
       if (children.length)
