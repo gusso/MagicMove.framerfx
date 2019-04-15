@@ -1,5 +1,5 @@
-import { Rect, Animatable, Size } from 'framer'
-import { isFiniteNumber } from './isFiniteNumber'
+import { Animatable } from 'framer'
+import { isFiniteNumber } from './utils'
 
 export enum DimensionType {
   FixedNumber,
@@ -59,7 +59,7 @@ export namespace ConstraintMask {
   }
 }
 
-export function valueToDimensionType(value: string | number | undefined) {
+export const valueToDimensionType = value => {
   if (typeof value === 'string') {
     const trimmedValue = value.trim()
     if (trimmedValue === 'auto') return DimensionType.Auto
@@ -141,12 +141,9 @@ export namespace ConstraintValues {
 
     let centerAnchorX = 0.5
     let centerAnchorY = 0.5
-    if (centerX) {
-      centerAnchorX = parseFloat(centerX) / 100
-    }
-    if (centerY) {
-      centerAnchorY = parseFloat(centerY) / 100
-    }
+
+    if (centerX) centerAnchorX = parseFloat(centerX) / 100
+    if (centerY) centerAnchorY = parseFloat(centerY) / 100
 
     return {
       left: constraints.left ? Animatable.getNumber(left) : null,
@@ -163,11 +160,7 @@ export namespace ConstraintValues {
     }
   }
 
-  export const toRect = (
-    values,
-    parentSize: Size | null,
-    autoSize: Size | null = null
-  ): Rect => {
+  export const toRect = (values, parentSize, autoSize) => {
     let x = values.left || 0
     let y = values.top || 0
     let width: number | null = null
@@ -223,6 +216,7 @@ export namespace ConstraintValues {
       height,
       values
     )
+
     width = sizeWithDefaults.width
     height = sizeWithDefaults.height
 
@@ -246,11 +240,7 @@ export namespace ConstraintValues {
   }
 }
 
-function sizeAfterApplyingDefaultsAndAspectRatio(
-  width: number | null,
-  height: number | null,
-  values
-): Size {
+const sizeAfterApplyingDefaultsAndAspectRatio = (width, height, values) => {
   let w = isFiniteNumber(width) ? width : 100
   let h = isFiniteNumber(height) ? height : 100
 
@@ -272,7 +262,7 @@ function sizeAfterApplyingDefaultsAndAspectRatio(
   }
 }
 
-function pinnedOffset(start: number | null, end: number | null) {
+const pinnedOffset = (start, end) => {
   if (!isFiniteNumber(start) || !isFiniteNumber(end)) return null
   return start + end
 }
