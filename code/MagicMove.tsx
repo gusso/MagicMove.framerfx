@@ -126,6 +126,19 @@ addPropertyControls(MagicMove, {
     defaultValue: 0,
   },
 
+  staggerDirection: {
+    type: ControlType.SegmentedEnum,
+    options: ['1', '-1'],
+    optionTitles: ['↑', '↓'],
+    title: 'Order',
+
+    hidden(props) {
+      return props.options != 'timing' || props.staggerChildren == 0
+    },
+
+    defaultValue: '1',
+  },
+
   transition: {
     title: 'Transition',
     type: ControlType.Enum,
