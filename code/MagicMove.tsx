@@ -9,14 +9,16 @@ export const MagicMove = props => {
   const { width, height, children } = props
   const [elements, setElements] = useState({})
 
-  const sources = variantKeys.map(source => ({
-    name: source,
-    elements: props[source],
+  const variants = variantKeys.map(variant => ({
+    name: variant,
+    elements: props[variant],
   }))
 
   useEffect(() => {
-    if (hasChildren(children)) getElements(sources, setElements)
-  }, [...sources.map(source => source.elements)])
+    if (hasChildren(children)) {
+      getElements(variants, setElements)
+    }
+  }, [...variants.map(source => source.elements)])
 
   let hasEvents = false
   Object.keys(events)

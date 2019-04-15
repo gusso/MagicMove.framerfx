@@ -7,15 +7,15 @@ import { ConstraintValues } from './Constraints'
 
 let i = 0
 
-const _RenderElement = props => {
-  const { element, isParent, transition } = props
+const _RenderElement = propsSource => {
+  const { element, isParent, transition } = propsSource
   const { children } = element.props
-  const animatedProps = {}
+  const props = {}
 
   if (isFrame(element)) {
     if (isParent) i = 0
 
-    const variantsSource = props.variants[i]
+    const variantsSource = propsSource.variants[i]
     const variants = {}
 
     const keysSource = Object.keys(variantsSource)
@@ -51,7 +51,7 @@ const _RenderElement = props => {
       })
 
       if (isParent) {
-        animatedProps[key] = () => {
+        props[key] = () => {
           let nextCycle
 
           if (currentCycle.includes(key)) {
@@ -66,21 +66,20 @@ const _RenderElement = props => {
       }
     })
 
-    animatedProps['variants'] = variants
-    animatedProps['initial'] = variants['children0']
-
-    if (isParent) {
-      animatedProps['animate'] = currentCycle
-    }
+    props['variants'] = variants
+    props['initial'] = variants['children0']
+    props['animate'] = isParent && currentCycle
 
     useEffect(() => {
-      if (isParent && keys.includes('auto0')) cycle(keys.indexOf('auto0'))
-    }, [props.variants])
+      if (isParent && keys.includes('auto0')) {
+        cycle(keys.indexOf('auto0'))
+      }
+    }, [propsSource.variants])
 
     const repeat = transition.animate == 'repeat'
     const count = transition.count - 1
 
-    animatedProps['transition'] = {
+    props['transition'] = {
       type: transition.transition,
       delay: transition.delay,
 
@@ -112,13 +111,13 @@ const _RenderElement = props => {
 
   return React.cloneElement(
     element,
-    animatedProps,
+    props,
     !isFrame(element)
       ? children
       : React.Children.map(children, child => (
           <_RenderElement
             element={child}
-            variants={props.variants}
+            variants={propsSource.variants}
             transition={transition}
             isParent={false}
           />
