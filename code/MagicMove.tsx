@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { ControlType, addPropertyControls, RenderTarget } from 'framer'
+import { ControlType, addPropertyControls } from 'framer'
 import { EmptyState } from './EmptyState'
 import { RenderElement } from './RenderElement'
 import { getElements } from './getElements'
+import { isCanvas, hasChildren } from './utils'
 
 export const MagicMove = props => {
   const { width, height, children } = props
@@ -58,9 +59,6 @@ const events = {
 const specialVariants = { children: 'Initial', auto: 'Automatic' }
 const variantTitles = { ...specialVariants, ...events }
 const variantKeys = Object.keys(variantTitles)
-
-const isCanvas = RenderTarget.current() == RenderTarget.canvas
-const hasChildren = children => !!React.Children.count(children)
 
 addPropertyControls(MagicMove, {
   ...variantKeys.reduce((object, key) => {
