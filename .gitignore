@@ -1,10 +1,11 @@
-*.framerxproj
-.DS_Store
 .backups
 .cache
+.DS_Store
 .framer-lock
 .npmrc
 .project.log
+.yarnrc
+*.framerxproj
 build
 code/canvas.tsx
 design
