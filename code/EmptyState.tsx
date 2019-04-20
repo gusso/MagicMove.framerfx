@@ -6,95 +6,63 @@ const color = '136, 85, 255'
 const _EmptyState = ({ size, initial, event }) => {
   const { width, height } = size
 
-  const minHeight = 24
-  const arrowWidth = 28
-  const hasAvailableHeight = height >= minHeight
-
-  const shouldShowArrow = hasAvailableHeight && width >= arrowWidth + 6
-  const shouldShowTitle = hasAvailableHeight && shouldShowArrow
-
-  const Title = ({ children }) => (
-    <span
+  const Radio = ({ connected = false }) => (
+    <div
       style={{
-        flex: 'auto',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textAlign: 'center',
-        fontSize: 12,
-        WebkitMaskImage:
-          'linear-gradient(90deg, black, black calc(100% - 12px), transparent)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+
+        width: 9,
+        height: 9,
+        margin: 5,
+        marginTop: 6,
+
+        borderRadius: '50%',
+        border: `1px solid rgb(${color})`,
+        background: connected ? `rgb(${color})` : 'white',
       }}
     >
-      {children}
-    </span>
+      <div
+        style={{
+          width: 3,
+          height: 3,
+          borderRadius: '50%',
+          background: 'white',
+        }}
+      />
+    </div>
   )
 
   const ChildType = ({ children, connected = false }) => (
-    <span
+    <div
       style={{
-        padding: `2px 5px 3px`,
-        margin: 5,
-        borderRadius: 2,
-        border: `1px solid rgba(${color}, .4)`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
 
-        background: !connected && `rgba(${color}, .9)`,
-        color: !connected && `rgba(255,255,255,.8)`,
+        color: !connected && `rgb(${color})`,
       }}
     >
-      {children}
-    </span>
+      <div>{children}</div>
+      <Radio connected={connected} />
+    </div>
   )
-
-  const Arrow = () => {
-    const width = 14
-    const height = 7
-
-    return (
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        style={{ flexShrink: 0, width: width, marginTop: 1 }}
-      >
-        <g transform="translate(0.5 0.5)">
-          <path
-            d="M 0 3 L 12 3"
-            fill="transparent"
-            stroke={`rgb(${color})`}
-            strokeLinecap="butt"
-          />
-          <path
-            d="M 9 0 L 12 3 L 9 6"
-            fill="transparent"
-            stroke={`rgb(${color})`}
-            strokeLinecap="butt"
-          />
-        </g>
-      </svg>
-    )
-  }
 
   return (
     <Frame
       width={width}
       height={height}
-      background={`rgba(${color}, 0.2)`}
+      background={`rgba(136, 85, 255, 0.15)`}
       color={`rgb(${color})`}
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        lineHeight: `${minHeight}px`,
-        padding: '0 10px',
+        display: 'grid',
+        padding: 10,
+        alignContent: 'center',
       }}
     >
-      {shouldShowTitle && (
-        <Title>
-          Connect to
-          <ChildType connected={initial}>Initial</ChildType>
-          and
-          <ChildType connected={event}>✦︎ Event</ChildType>
-        </Title>
-      )}
-      {shouldShowArrow && <Arrow />}
+      <ChildType connected={initial}>Initial</ChildType>
+      <ChildType connected={event}>Event</ChildType>
     </Frame>
   )
 }
