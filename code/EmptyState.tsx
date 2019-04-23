@@ -96,7 +96,7 @@ const _EmptyState = ({ size, initial, event }) => {
       width={width}
       height={height}
       background={color(0.1)}
-      border={`calc(1px * ${scaleFactor}) dashed ${color(0.15)}`}
+      border={`calc(1px * ${scaleFactor}) dashed ${color(0.2)}`}
     >
       {showChecklist && <Checklist />}
     </Frame>
