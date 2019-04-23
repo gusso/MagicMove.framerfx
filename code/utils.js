@@ -6,6 +6,6 @@ export const isFiniteNumber = value =>
 
 export const isFrame = element => element.type.name == 'Frame'
 
-export const isCanvas = RenderTarget.current() == RenderTarget.canvas
+export const isCanvas = () => RenderTarget.current() == RenderTarget.canvas
 
 export const hasChildren = children => !!React.Children.count(children)

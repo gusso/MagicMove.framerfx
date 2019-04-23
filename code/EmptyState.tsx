@@ -11,8 +11,6 @@ const _EmptyState = ({ size, initial, event }) => {
 
   const color = (a = 1) => Color.toString(Color.alpha(Color('#85F'), a))
 
-  if (!isCanvas) return null
-
   const Icon = ({ size }) => {
     return (
       <svg width={size} height={size} viewBox="0 0 13 13">
@@ -92,14 +90,16 @@ const _EmptyState = ({ size, initial, event }) => {
   }
 
   return (
-    <Frame
-      width={width}
-      height={height}
-      background={color(0.1)}
-      border={`calc(1px * ${scaleFactor}) dashed ${color(0.2)}`}
-    >
-      {showChecklist && <Checklist />}
-    </Frame>
+    isCanvas() && (
+      <Frame
+        width={width}
+        height={height}
+        background={color(0.1)}
+        border={`calc(1px * ${scaleFactor}) dashed ${color(0.2)}`}
+      >
+        {showChecklist && <Checklist />}
+      </Frame>
+    )
   )
 }
 

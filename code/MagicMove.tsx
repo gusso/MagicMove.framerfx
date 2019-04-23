@@ -29,7 +29,7 @@ export const MagicMove = props => {
     })
 
   return hasChildren(children) && hasEvents ? (
-    isCanvas || Object.keys(elements).length == 0 ? (
+    isCanvas() || Object.keys(elements).length == 0 ? (
       children
     ) : (
       <RenderElement
@@ -364,6 +364,6 @@ addPropertyControls(MagicMove, {
 })
 
 MagicMove.defaultProps = {
-  width: 400,
-  height: 400,
+  width: 200,
+  height: 200,
 }
