@@ -1,68 +1,104 @@
 import * as React from 'react'
-import { Frame } from 'framer'
-
-const color = '136, 85, 255'
+import { Frame, Color } from 'framer'
+import { isCanvas } from './utils'
 
 const _EmptyState = ({ size, initial, event }) => {
   const { width, height } = size
 
-  const Radio = ({ connected = false }) => (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+  const showChecklist = height >= 75
+  const scaleFactor =
+    'var(--framerInternalCanvas-canvasPlaceholderContentScaleFactor, 1)'
 
-        width: 9,
-        height: 9,
-        margin: 5,
-        marginTop: 6,
+  const color = (a = 1) => Color.toString(Color.alpha(Color('#85F'), a))
 
-        borderRadius: '50%',
-        border: `1px solid rgb(${color})`,
-        background: connected ? `rgb(${color})` : 'white',
-      }}
-    >
+  if (!isCanvas) return null
+
+  const Icon = ({ size }) => {
+    return (
+      <svg width={size} height={size} viewBox="0 0 13 13">
+        <path
+          d="M 3.5 7.5 L 5.5 9 L 9 4"
+          fill="transparent"
+          stroke-width="1.75"
+          stroke="white"
+          stroke-linecap="square"
+        />
+      </svg>
+    )
+  }
+
+  const Checkbox = ({ connected = false }) => {
+    const size = 11
+    const margin = 4
+
+    return (
       <div
         style={{
-          width: 3,
-          height: 3,
-          borderRadius: '50%',
-          background: 'white',
+          width: size,
+          height: size,
+
+          margin: margin,
+          marginTop: margin + 1,
+          marginRight: 12,
+
+          borderRadius: 3,
+          background: connected ? color() : color(0.25),
         }}
-      />
-    </div>
-  )
+      >
+        {connected && <Icon size={size} />}
+      </div>
+    )
+  }
 
-  const ChildType = ({ children, connected = false }) => (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
+  const Item = ({ children, connected = false }) => {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
 
-        color: !connected && `rgb(${color})`,
-      }}
-    >
-      <div>{children}</div>
-      <Radio connected={connected} />
-    </div>
-  )
+          color: color(),
+        }}
+      >
+        <div>{children}</div>
+        <Checkbox connected={connected} />
+      </div>
+    )
+  }
+
+  const Checklist = () => {
+    return (
+      <div
+        style={{
+          display: 'grid',
+          alignItems: 'center',
+          justifyContent: 'end',
+          height: '100%',
+          WebkitMaskImage: `linear-gradient(90deg, transparent, black calc(12px * ${scaleFactor}), black)`,
+        }}
+      >
+        <div
+          style={{
+            transformOrigin: '100% 50%',
+            transform: `scale(calc(${scaleFactor}))`,
+          }}
+        >
+          <Item connected={initial}>Initial</Item>
+          <Item connected={event}>Event</Item>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <Frame
       width={width}
       height={height}
-      background={`rgba(136, 85, 255, 0.15)`}
-      color={`rgb(${color})`}
-      style={{
-        display: 'grid',
-        padding: 10,
-        alignContent: 'center',
-      }}
+      background={color(0.1)}
+      border={`calc(1px * ${scaleFactor}) dashed ${color(0.15)}`}
     >
-      <ChildType connected={initial}>Initial</ChildType>
-      <ChildType connected={event}>Event</ChildType>
+      {showChecklist && <Checklist />}
     </Frame>
   )
 }
