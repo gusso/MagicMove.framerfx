@@ -84,6 +84,8 @@ const _RenderElement = propsSource => {
 
     const repeat = transition.animate == 'repeat'
     const count = transition.count - 1
+    const repeatCount =
+      transition.repeatCount == 'infinity' ? Infinity : count
 
     props['transition'] = {
       type: transition.transition,
@@ -99,20 +101,11 @@ const _RenderElement = propsSource => {
       duration: transition.duration,
       ease:
         transition.ease == 'custom'
-          ? transition.customEase.split(',')
+          ? transition.customEase.split(',').map(Number)
           : transition.ease,
-      loop:
-        repeat &&
-        transition.repeat == 'loop' &&
-        (transition.loop == 'infinity' ? Infinity : count),
-      yoyo:
-        repeat &&
-        transition.repeat == 'yoyo' &&
-        (transition.yoyo == 'infinity' ? Infinity : count),
-      flip:
-        repeat &&
-        transition.repeat == 'flip' &&
-        (transition.flip == 'infinity' ? Infinity : count),
+      loop: repeat && transition.repeat == 'loop' && repeatCount,
+      yoyo: repeat && transition.repeat == 'yoyo' && repeatCount,
+      flip: repeat && transition.repeat == 'flip' && repeatCount,
     }
 
     i++

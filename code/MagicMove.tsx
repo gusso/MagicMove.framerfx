@@ -244,7 +244,7 @@ addPropertyControls(MagicMove, {
   },
 
   customEase: {
-    title: 'Custom',
+    title: ' ',
     type: ControlType.String,
 
     hidden(props) {
@@ -288,8 +288,8 @@ addPropertyControls(MagicMove, {
     defaultValue: 'loop',
   },
 
-  loop: {
-    title: 'Loop',
+  repeatCount: {
+    title: ' ',
     type: ControlType.SegmentedEnum,
     options: ['count', 'infinity'],
     optionTitles: ['Count', 'Infinity'],
@@ -298,44 +298,7 @@ addPropertyControls(MagicMove, {
       return (
         props.options != 'transition' ||
         props.transition != 'tween' ||
-        props.animate != 'repeat' ||
-        props.repeat != 'loop'
-      )
-    },
-
-    defaultValue: 'infinity',
-  },
-
-  yoyo: {
-    title: 'Yoyo',
-    type: ControlType.SegmentedEnum,
-    options: ['count', 'infinity'],
-    optionTitles: ['Count', 'Infinity'],
-
-    hidden(props) {
-      return (
-        props.options != 'transition' ||
-        props.transition != 'tween' ||
-        props.animate != 'repeat' ||
-        props.repeat != 'yoyo'
-      )
-    },
-
-    defaultValue: 'infinity',
-  },
-
-  flip: {
-    title: 'Flip',
-    type: ControlType.SegmentedEnum,
-    options: ['count', 'infinity'],
-    optionTitles: ['Count', 'Infinity'],
-
-    hidden(props) {
-      return (
-        props.options != 'transition' ||
-        props.transition != 'tween' ||
-        props.animate != 'repeat' ||
-        props.repeat != 'flip'
+        props.animate != 'repeat'
       )
     },
 
@@ -343,7 +306,7 @@ addPropertyControls(MagicMove, {
   },
 
   count: {
-    title: 'Count',
+    title: ' ',
     type: ControlType.Number,
     displayStepper: true,
     min: 1,
@@ -353,9 +316,7 @@ addPropertyControls(MagicMove, {
         props.options != 'transition' ||
         props.transition != 'tween' ||
         props.animate != 'repeat' ||
-        (props.repeat == 'loop' && props.loop != 'count') ||
-        (props.repeat == 'yoyo' && props.yoyo != 'count') ||
-        (props.repeat == 'flip' && props.flip != 'count')
+        props.repeatCount != 'count'
       )
     },
 
