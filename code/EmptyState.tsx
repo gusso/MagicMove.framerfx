@@ -1,74 +1,93 @@
 import * as React from 'react'
-import { Frame } from 'framer'
-
-const color = '136, 85, 255'
+import { Frame, Color } from 'framer'
+import { isCanvas } from './utils'
 
 const _EmptyState = ({ size, initial, event }) => {
   const { width, height } = size
 
-  const minHeight = 24
-  const arrowWidth = 28
-  const hasAvailableHeight = height >= minHeight
+  const showChecklist = height >= 75
+  const scaleFactor =
+    'var(--framerInternalCanvas-canvasPlaceholderContentScaleFactor, 1)'
 
-  const shouldShowArrow = hasAvailableHeight && width >= arrowWidth + 6
-  const shouldShowTitle = hasAvailableHeight && shouldShowArrow
+  const color = (a = 1) => Color.toString(Color.alpha(Color('#85F'), a))
 
-  const Title = ({ children }) => (
-    <span
-      style={{
-        flex: 'auto',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textAlign: 'center',
-        fontSize: 12,
-        WebkitMaskImage:
-          'linear-gradient(90deg, black, black calc(100% - 12px), transparent)',
-      }}
-    >
-      {children}
-    </span>
-  )
+  if (!isCanvas) return null
 
-  const ChildType = ({ children, connected = false }) => (
-    <span
-      style={{
-        padding: `2px 5px 3px`,
-        margin: 5,
-        borderRadius: 2,
-        border: `1px solid rgba(${color}, .4)`,
+  const Icon = ({ size }) => {
+    return (
+      <svg width={size} height={size} viewBox="0 0 13 13">
+        <path
+          d="M 3.5 7.5 L 5.5 9 L 9 4"
+          fill="transparent"
+          stroke-width="1.75"
+          stroke="white"
+          stroke-linecap="square"
+        />
+      </svg>
+    )
+  }
 
-        background: !connected && `rgba(${color}, .9)`,
-        color: !connected && `rgba(255,255,255,.8)`,
-      }}
-    >
-      {children}
-    </span>
-  )
-
-  const Arrow = () => {
-    const width = 14
-    const height = 7
+  const Checkbox = ({ connected = false }) => {
+    const size = 11
+    const margin = 4
 
     return (
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        style={{ flexShrink: 0, width: width, marginTop: 1 }}
+      <div
+        style={{
+          width: size,
+          height: size,
+
+          margin: margin,
+          marginTop: margin + 1,
+          marginRight: 12,
+
+          borderRadius: 3,
+          background: connected ? color() : color(0.25),
+        }}
       >
-        <g transform="translate(0.5 0.5)">
-          <path
-            d="M 0 3 L 12 3"
-            fill="transparent"
-            stroke={`rgb(${color})`}
-            strokeLinecap="butt"
-          />
-          <path
-            d="M 9 0 L 12 3 L 9 6"
-            fill="transparent"
-            stroke={`rgb(${color})`}
-            strokeLinecap="butt"
-          />
-        </g>
-      </svg>
+        {connected && <Icon size={size} />}
+      </div>
+    )
+  }
+
+  const Item = ({ children, connected = false }) => {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+
+          color: color(),
+        }}
+      >
+        <div>{children}</div>
+        <Checkbox connected={connected} />
+      </div>
+    )
+  }
+
+  const Checklist = () => {
+    return (
+      <div
+        style={{
+          display: 'grid',
+          alignItems: 'center',
+          justifyContent: 'end',
+          height: '100%',
+          WebkitMaskImage: `linear-gradient(90deg, transparent, black calc(12px * ${scaleFactor}), black)`,
+        }}
+      >
+        <div
+          style={{
+            transformOrigin: '100% 50%',
+            transform: `scale(calc(${scaleFactor}))`,
+          }}
+        >
+          <Item connected={initial}>Initial</Item>
+          <Item connected={event}>Event</Item>
+        </div>
+      </div>
     )
   }
 
@@ -76,25 +95,10 @@ const _EmptyState = ({ size, initial, event }) => {
     <Frame
       width={width}
       height={height}
-      background={`rgba(${color}, 0.2)`}
-      color={`rgb(${color})`}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        lineHeight: `${minHeight}px`,
-        padding: '0 10px',
-      }}
+      background={color(0.1)}
+      border={`calc(1px * ${scaleFactor}) dashed ${color(0.2)}`}
     >
-      {shouldShowTitle && (
-        <Title>
-          Connect to
-          <ChildType connected={initial}>Initial</ChildType>
-          and
-          <ChildType connected={event}>✦︎ Event</ChildType>
-        </Title>
-      )}
-      {shouldShowArrow && <Arrow />}
+      {showChecklist && <Checklist />}
     </Frame>
   )
 }
