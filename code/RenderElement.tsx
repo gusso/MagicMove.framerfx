@@ -90,7 +90,6 @@ const _RenderElement = propsSource => {
     props['transition'] = {
       type: transition.transition,
 
-      delayChildren: isParent && transition.delayChildren,
       staggerChildren: isParent && transition.staggerChildren,
       staggerDirection: parseInt(transition.staggerDirection),
 

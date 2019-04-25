@@ -83,23 +83,9 @@ addPropertyControls(MagicMove, {
   },
 
   delay: {
-    title: 'Delay All',
+    title: 'Delay',
     type: ControlType.Number,
     step: 0.1,
-    min: 0,
-    displayStepper: true,
-
-    hidden(props) {
-      return props.options != 'timing'
-    },
-
-    defaultValue: 0,
-  },
-
-  delayChildren: {
-    title: 'Delay Child',
-    type: ControlType.Number,
-    step: 0.05,
     min: 0,
     displayStepper: true,
 
