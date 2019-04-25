@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@framer/benjamin.super-ellipse@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.framer.com/@framer/benjamin.super-ellipse/-/@framer/benjamin.super-ellipse-1.1.0.tgz#bb022093dd4756d2b9ece9012c140b4a1500e58e"
+  integrity sha1-uwIgk91HVtK57OkBLBQLShUA5Y4=
+
 "@types/prop-types@*":
   version "15.7.0"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.0.tgz#4c48fed958d6dcf9487195a0ef6456d5f6e0163a"
