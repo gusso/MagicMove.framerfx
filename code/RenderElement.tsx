@@ -49,7 +49,7 @@ const _RenderElement = propsSource => {
           opacity: get.opacity(variant.style.opacity),
           rotate: variant.style.rotate,
           borderRadius: get.radius(variant.style.borderRadius),
-          backgroundColor: get.color(variant.style.backgroundColor),
+          background: get.bgColor(variant.background),
           border: get.border(variant._border),
           boxShadow: get.shadow(variant.style.boxShadow),
           ...(!isParent && constraintStyles),

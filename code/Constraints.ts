@@ -160,7 +160,7 @@ export namespace ConstraintValues {
     }
   }
 
-  export const toRect = (values, parentSize, autoSize) => {
+  export const toRect = (values, parentSize, autoSize = null) => {
     let x = values.left || 0
     let y = values.top || 0
     let width: number | null = null

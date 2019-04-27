@@ -5,7 +5,7 @@ export const get = {
   radius: value => radius(value),
   shadow: value => shadow(value),
   border: value => border(value),
-  color: value => color(value),
+  bgColor: value => bgColor(value),
 }
 
 const opacity = opacity => {
@@ -66,8 +66,22 @@ const border = border => {
 
 const color = color => {
   if (color == undefined) {
-    return Color.toString(Color('transparent'))
+    return 'transparent'
   }
 
   return Color.toString(Color(color))
+}
+
+const bgColor = background => {
+  let color1 = 'transparent'
+  let color2 = 'transparent'
+  let angle = '0'
+
+  if (background != null) {
+    color1 = background.start ? background.start : background.initialValue
+    color2 = background.end ? background.end : background.initialValue
+    angle = background.angle ? background.angle : '0'
+  }
+
+  return `linear-gradient(${angle}deg, ${color(color1)}, ${color(color2)})`
 }
