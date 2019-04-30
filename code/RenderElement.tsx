@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useCycle } from 'framer'
 import { isFrame } from './utils'
 import { get } from './processValues'
-import { ConstraintValues } from './Constraints'
+import { calculateRect } from './NewConstraints'
 
 let i = 0
 
@@ -33,10 +33,7 @@ const _RenderElement = propsSource => {
 
     keysSource.forEach(key => {
       variantsSource[key].forEach((variant, i) => {
-        const constraints = ConstraintValues.toRect(
-          ConstraintValues.fromProperties(variant.constraints),
-          variant.parentSize
-        )
+        const constraints = calculateRect(variant, variant.parentSize)
 
         const constraintStyles = {
           width: constraints.width,
@@ -72,6 +69,7 @@ const _RenderElement = propsSource => {
       }
     })
 
+    props['center'] = null
     props['variants'] = variants
     props['initial'] = variants['children0']
     props['animate'] = isParent && currentCycle

@@ -1,4 +1,5 @@
 import { isFrame } from './utils'
+import { calculateSize } from './NewConstraints'
 
 export const getElements = (sources, setElements) => {
   const elements = {}
@@ -12,7 +13,7 @@ export const getElements = (sources, setElements) => {
   ) => {
     if (isFrame(element)) {
       const { children } = element.props
-      const { width, height } = element.props.constraints
+      const { width, height } = calculateSize(element.props, parentSize)
       if (isParent) i = 0
 
       if (!elements[i]) elements[i] = {}
