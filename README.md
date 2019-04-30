@@ -1,4 +1,4 @@
-# Animate components without using code
+# Create interactive components without code
 
 1. Create a design component with **`⌘+K`**, and at least one instance of it with **`⌘+D`**.
 2. Double click on your instances to change the children's properties you want to animate.

@@ -37,7 +37,7 @@ const shadow = shadows => {
       .concat('rgba(0,0,0,0)')
       .join(' ')
   } else {
-    const shadowArray = shadows.split(/, (?=[0-9]+px)/)
+    const shadowArray = shadows.split(/, (?=-?\d+px)|, (?=inset -?\d+px)/)
     const newShadows = []
 
     shadowArray.forEach(shadow => {
