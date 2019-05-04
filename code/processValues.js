@@ -28,6 +28,9 @@ const radius = radius => {
       .join(' ')
 
   return radius
+    .split(' ')
+    .map(n => (n.includes('px') ? n : n + 'px'))
+    .join(' ')
 }
 
 const shadow = shadows => {
