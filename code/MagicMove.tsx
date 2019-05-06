@@ -51,7 +51,6 @@ export const MagicMove = props => {
 const events = {
   onTap: 'Tap',
   onTapStart: 'Tap Start',
-  onTapCancel: 'Tap Cancel',
   onHoverStart: 'Hover Start',
   onHoverEnd: 'Hover End',
 }
@@ -140,7 +139,7 @@ addPropertyControls(MagicMove, {
     title: 'Damping',
     type: ControlType.Number,
     min: 0,
-    max: 300,
+    max: 50,
 
     hidden(props) {
       return props.options != 'transition' || props.transition != 'spring'

@@ -1,48 +1,105 @@
-# Create interactive components without code
+# Design interactive animated components. No code.
 
-1. Create a design component with **`⌘+K`**, and at least one instance of it with **`⌘+D`**.
-2. Double click on your instances to change the children's properties you want to animate.
-3. Connect Magic Move to one of the instances as its **`Initial`** state, and to any other instances as **`✦︎ Events`** to be triggered.
-4. Preview and be happy forever ✨
+Magic Move 3 uses the power of Framer's [new animation library](https://www.framer.com/api/animation/) to smoothly transition between variants of your design components using user-triggered events and timing preferences.
+
+## What's New on 3.0.0
+
+🚴‍ Connect multiple instances to a single event to cycle or toggle between states.  
+🤸‍ Three types of looping allow you to create infinite animations, like spinners.  
+👯‍ Set staggerred delays to children to simulate natural movement.  
+⠀
+
+---
+
+⠀
+
+## Quick Start
+
+1. Create a design component (**`⌘+K`**), and at least one instance of it (**`⌘+D`**).
+2. Double click on your instance to change the children's properties you want to animate.
+3. Set Magic Move's **`Initial`** state by connecting it to one of your component's instances.
+4. Connect to other instances to set the states to be triggered by touch and mouse **`Events`**.
+5. Open preview and marvel at your own interactive animated creation 🎩🐇  
+   ⠀
 
 ## Supported Components
 
-Only Frames animate as of right now. However you can wrap anything in a Frame (such as Text and Stacks) to be able to animate its position, rotation and opacity.
+Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such as Text, Stacks, and any code component) to be able to animate its position, rotation and opacity.
 
-Any component inside a Stack will not animate, but you can press **`⌘+⌫`** to unwrap the children and maintain their location before creating your animations.
+## Events
 
-## Trigger Events
-
-| Event       | Description                                                       |
-| ----------- | ----------------------------------------------------------------- |
-| Automatic   | Initiates the animation when the Frame is rendered on the screen. |
-| Tap         | Tapping the target, also triggers on mouse click.                 |
-| Tap Start   | Touching the target.                                              |
-| Tap End     | Releasing your finger from the target.                            |
-| Mouse Over  | Moving the mouse over the target.                                 |
-| Mouse Leave | Moving the mouse away from the target.                            |
+| Event       | Description                               | Cycle |
+| ----------- | ----------------------------------------- | ----- |
+| Automatic   | On component render.                      |       |
+| Tap         | Tapping or clicking the component.        | ✅    |
+| Tap Start   | Touching the component.                   | ✅    |
+| Hover Start | Moving the mouse over the component.      | ✅    |
+| Hover End   | Moving the mouse away from the component. | ✅    |
 
 ## Animatable Properties
 
-| Property   | Observations       |
-| ---------- | ------------------ |
-| Size       |                    |
-| Position   |                    |
-| Opacity    |                    |
-| Rotation   |                    |
-| Background | Solid colors only. |
+| Property      | Description                                         |
+| ------------- | --------------------------------------------------- |
+| Position      |                                                     |
+| Size          |                                                     |
+| Opacity       |                                                     |
+| Rotation      |                                                     |
+| Border Radius |                                                     |
+| Background    | 🌈 Animates between solid and gradient backgrounds. |
+| Border        |                                                     |
+| Shadows       | 🔦Animates any number of outer and inner shadows.   |
+
+## Transition Options
+
+| Property   | Description                                                           |
+| ---------- | --------------------------------------------------------------------- |
+| Transition | Select `Tween` for duration-based animations or `Spring` for physics. |
+| Damping    | **`Spring`** Strength of opposing force.                              |
+| Mass       | **`Spring`** Mass of the moving object.                               |
+| Stifness   | **`Spring`** Stiffness of the spring.                                 |
+| Duration   | **`Tween`** Duration of animation (seconds).                          |
+| Easing     | **`Tween`** Predefined or custom bézier curve easing function.        |
+| Animate    | **`Tween`** Single or continuous animation.                           |
+| Repeat     | **`Tween`** Loop, yoyo (reverse easing) or flip the animation.        |
+
+## Timing Options
+
+| Property | Description                                                      |
+| -------- | ---------------------------------------------------------------- |
+| Delay    | Delay all animations by set time (seconds).                      |
+| Stagger  | Animations of child Frames are staggered by this time (seconds). |
+
+⠀
+
+---
+
+⠀
 
 ## Version History
 
-**1.12.0**  
+**3.0.0**  
+• `Tap`, `Tap Start`, `Hover Start`, and `Hover End` accept multiple instances for cycling.  
+• Added looping controls for `Tween` animations.  
+• Added `Stagger` property to orchestrate children timing.  
+• `Radius`, `Border` and `Shadow` are now animatable.  
+• `Background` animations now support gradients.  
+• Smoother frame rate on position and size transitions.  
+• Removed `Tap End` event, use `Tap` instead for same effect.  
+• Redesigned empty state.  
+• Complete rewrite, a lot of bugs are gone, but there will be new ones. [Report bugs](https://twitter.com/gusso).  
+⠀
+
+**2.0.0**  
 • Support for new events: `Tap Start`, `Tap End`, `Mouse Over`, `Mouse Leave`  
 • Connected Frames are now previewed on Property Panel.  
-• Improved rendering speed to stop errors on the canvas.
+• Improved rendering speed to stop errors on the canvas.  
+⠀
 
 **1.5.0**  
-• Parent Frame properties are now animatable: `background`, `opacity`, `rotation`
+• Parent Frame properties are now animatable: `background`, `opacity`, `rotation`  
+⠀
 
 **1.0.0**  
 • Initial release.
 
-### 💬 Hit me up with feedback [@gusso](https://twitter.com/gusso)
+### 💬 Feedback and support on Twitter → [@gusso](https://twitter.com/gusso)
