@@ -35,9 +35,12 @@ const _RenderElement = propsSource => {
       variantsSource[key].forEach((variant, i) => {
         const constraints = calculateRect(variant, variant.parentSize)
 
-        const constraintStyles = {
+        const size = {
           width: constraints.width,
           height: constraints.height,
+        }
+
+        const position = {
           top: constraints.y,
           left: constraints.x,
         }
@@ -49,7 +52,13 @@ const _RenderElement = propsSource => {
           background: get.bgColor(variant.background),
           border: get.border(variant._border),
           boxShadow: get.shadow(variant.style.boxShadow),
-          ...(!isParent && constraintStyles),
+          ...(!isParent && size),
+          ...(!isParent && key == 'children' && position),
+          ...(!isParent &&
+            key != 'children' && {
+              y: position.top - variants['children0'].top,
+              x: position.left - variants['children0'].left,
+            }),
         }
       })
 
