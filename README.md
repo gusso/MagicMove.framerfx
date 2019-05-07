@@ -1,11 +1,11 @@
 # Design interactive animated components. No code.
 
-Magic Move 3 uses the power of Framer's [new animation library](https://www.framer.com/api/animation/) to smoothly transition between variants of your design components using user-triggered events and timing preferences.
+Magic Move 3 uses the power of Framer's [animation library](https://www.framer.com/api/animation/) to smoothly transition between variants of your design components using user-triggered events and powerful timing controls.
 
-## What's New on 3.0.0
+## What's New on 3.0
 
 🚴‍ Connect multiple instances to a single event to cycle or toggle between states.  
-🤸‍ Three types of looping allow you to create infinite animations, like spinners.  
+🤸‍ Three types of looping allow you to create fluid continuous animations, like spinners.  
 👯‍ Set staggerred delays to children to simulate natural movement.  
 ⠀
 
