@@ -13,13 +13,13 @@ const _EmptyState = ({ size, initial, event }) => {
 
   const Icon = ({ size }) => {
     return (
-      <svg width={size} height={size} viewBox="0 0 13 13">
+      <svg width={size} height={size} viewBox='0 0 13 13'>
         <path
-          d="M 3.5 7.5 L 5.5 9 L 9 4"
-          fill="transparent"
-          stroke-width="1.75"
-          stroke="white"
-          stroke-linecap="square"
+          d='M 3.5 7.5 L 5.5 9 L 9 4'
+          fill='transparent'
+          stroke-width='1.75'
+          stroke='white'
+          stroke-linecap='square'
         />
       </svg>
     )
