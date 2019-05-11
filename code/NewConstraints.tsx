@@ -47,6 +47,9 @@ export interface CustomConstraintProperties {
    * @public
    */
   enabled: boolean
+
+  intrinsicWidth?: number
+  intrinsicHeight?: number
 }
 
 export interface ConstraintConfiguration {
