@@ -81,8 +81,12 @@ const bgColor = background => {
   let angle = '0'
 
   if (background != null) {
-    color1 = background.start ? background.start : background.initialValue
-    color2 = background.end ? background.end : background.initialValue
+    color1 = background.stops
+      ? background.stops[0].value
+      : background.initialValue
+    color2 = background.stops
+      ? background.stops[1].value
+      : background.initialValue
     angle = background.angle ? background.angle : '0'
   }
 

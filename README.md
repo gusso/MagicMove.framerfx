@@ -77,6 +77,11 @@ Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such 
 
 ## Version History
 
+**3.3.0**  
+• Fixed background images not being visible.  
+• Fixed gradient animation.  
+⠀
+
 **3.0.0**  
 • `Tap`, `Tap Start`, `Hover Start`, and `Hover End` accept multiple instances for cycling.  
 • Added looping controls for `Tween` animations.  
@@ -86,7 +91,7 @@ Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such 
 • Smoother frame rate on position and size transitions.  
 • Removed `Tap End` event, use `Tap` instead for same effect.  
 • Redesigned empty state.  
-• Complete rewrite, a lot of bugs are gone, but there will be new ones. [Report bugs](https://twitter.com/gusso).  
+• Complete rewrite, a lot of bugs are gone, but there will be new ones. [Report bugs](https://twitter.com/gusso)  
 ⠀
 
 **2.0.0**  
