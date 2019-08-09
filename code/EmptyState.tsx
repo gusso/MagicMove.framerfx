@@ -2,18 +2,16 @@ import * as React from 'react'
 import { Frame, Color } from 'framer'
 import { isCanvas } from './utils'
 
-const _EmptyState = ({ size, initial, event }) => {
-  const { width, height } = size
-
+const _EmptyState = ({ height, initial, event }) => {
   const showChecklist = height >= 75
   const scaleFactor =
     'var(--framerInternalCanvas-canvasPlaceholderContentScaleFactor, 1)'
 
   const color = (a = 1) => Color.toString(Color.alpha(Color('#85F'), a))
 
-  const Icon = ({ size }) => {
+  const Icon = () => {
     return (
-      <svg width={size} height={size} viewBox='0 0 13 13'>
+      <svg viewBox='0 0 13 13'>
         <path
           d='M 3.5 7.5 L 5.5 9 L 9 4'
           fill='transparent'
@@ -43,7 +41,7 @@ const _EmptyState = ({ size, initial, event }) => {
           background: connected ? color() : color(0.25),
         }}
       >
-        {connected && <Icon size={size} />}
+        {connected && <Icon />}
       </div>
     )
   }
@@ -92,8 +90,7 @@ const _EmptyState = ({ size, initial, event }) => {
   return (
     isCanvas() && (
       <Frame
-        width={width}
-        height={height}
+        size='100%'
         background={color(0.1)}
         border={`calc(1px * ${scaleFactor}) dashed ${color(0.2)}`}
       >

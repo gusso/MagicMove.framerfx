@@ -7,7 +7,7 @@ import { getElements } from './getElements'
 import { isCanvas, hasChildren } from './utils'
 
 export const MagicMove = props => {
-  const { width, height, children } = props
+  const { height, children } = props
   const [elements, setElements] = useState({})
 
   const variants = variantKeys.map(variant => ({
@@ -41,7 +41,7 @@ export const MagicMove = props => {
     )
   ) : (
     <EmptyState
-      size={{ width, height }}
+      height={height}
       initial={hasChildren(children)}
       event={hasEvents}
     />
