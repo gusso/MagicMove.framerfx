@@ -81,7 +81,7 @@ const _EmptyState = ({ height, initial, event }) => {
     </div>
   )
 
-  const Glyph = props => {
+  const Star = props => {
     const { shadow } = props
 
     return (
@@ -122,9 +122,9 @@ const _EmptyState = ({ height, initial, event }) => {
 
   const Icon = () => (
     <>
-      <Glyph shadow={[-0.5, 1, 0.9, 0.14]} />
-      <Glyph shadow={[-1, 3, 2.1, 0.15]} />
-      <Glyph />
+      <Star shadow={[-0.5, 1, 0.9, 0.14]} />
+      <Star shadow={[-1, 3, 2.1, 0.15]} />
+      <Star />
     </>
   )
 
