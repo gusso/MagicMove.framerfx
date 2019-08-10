@@ -95,9 +95,9 @@ const _EmptyState = ({ height, initial, event }) => {
             right: 0,
             willChange: 'transform',
             transformOrigin: '85% 12%',
-            transform: shadow
-              ? 'scale(6.3)' + ` translate(${shadow[0]}px, ${shadow[1]}px)`
-              : 'scale(6.3)',
+            transform:
+              'scale(6.3)' +
+              (shadow ? ` translate(${shadow[0]}px, ${shadow[1]}px)` : ''),
             filter: shadow && `blur(${shadow[2]}px)`,
             opacity: shadow && shadow[3],
           }}
@@ -127,8 +127,6 @@ const _EmptyState = ({ height, initial, event }) => {
       <Star />
     </>
   )
-
-  console.log(isThumbnail())
 
   return (
     (isCanvas() || isThumbnail()) && (
