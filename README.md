@@ -46,7 +46,6 @@ Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such 
 | Rotation      |                                                     |
 | Border Radius |                                                     |
 | Background    | 🌈 Animates between solid and gradient backgrounds. |
-| Border        |                                                     |
 | Shadows       | 🔦Animates any number of outer and inner shadows.   |
 
 ## Transition Options
@@ -76,6 +75,10 @@ Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such 
 ⠀
 
 ## Version History
+
+**3.7.0**  
+• Removed `Border` animations temporarily.  
+⠀
 
 **3.3.0**  
 • Fixed background images not being visible.  

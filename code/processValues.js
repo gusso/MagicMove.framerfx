@@ -4,7 +4,6 @@ export const get = {
   opacity: value => opacity(value),
   radius: value => radius(value),
   shadow: value => shadow(value),
-  border: value => border(value),
   bgColor: value => bgColor(value),
 }
 
@@ -55,16 +54,6 @@ const shadow = shadows => {
 
     return newShadows.join(', ')
   }
-}
-
-const border = border => {
-  if (Object.entries(border).length == 0) {
-    return `0px solid ${color('transparent')}`
-  }
-
-  return `${border.borderWidth}px ${border.borderStyle} ${color(
-    border.borderColor
-  )}`
 }
 
 const color = color => {
