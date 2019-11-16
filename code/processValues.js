@@ -56,10 +56,11 @@ const shadow = shadows => {
   }
 }
 
-const color = color => {
-  if (color == undefined) {
-    return 'transparent'
-  }
+const color = value => {
+  const hasColor = / [a-z].*?\)/.exec(value)
+
+  let color =
+    value == undefined ? 'transparent' : hasColor ? hasColor[0] : value
 
   return Color.toString(Color(color))
 }
@@ -73,9 +74,13 @@ const bgColor = background => {
     color1 = background.stops
       ? background.stops[0].value
       : background.initialValue
+      ? background.initialValue
+      : background
     color2 = background.stops
       ? background.stops[1].value
       : background.initialValue
+      ? background.initialValue
+      : background
     angle = background.angle ? background.angle : '0'
   }
 
