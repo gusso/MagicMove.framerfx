@@ -1,18 +1,18 @@
 {
-  "main": "dist/index.js",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/react": "^16.8"
-  },
-  "peerDependencies": {
-    "framer": "^1.0",
-    "react": "^16.8"
-  },
-  "framer": {
-    "id": "312dcc85-8f45-492d-acf6-0c6d39046726",
-    "displayName": "Magic Move"
-  },
-  "author": "Henrique Gusso",
-  "name": "@framer/gusso.magic-move",
-  "version": "3.7.0"
+	"main": "dist/index.js",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/react": "^16.8"
+	},
+	"peerDependencies": {
+		"framer": "^1.0",
+		"react": "^16.8"
+	},
+	"framer": {
+		"id": "312dcc85-8f45-492d-acf6-0c6d39046726",
+		"displayName": "Magic Move"
+	},
+	"author": "Henrique Gusso",
+	"name": "@framer/gusso.magic-move",
+	"version": "3.8.0"
 }

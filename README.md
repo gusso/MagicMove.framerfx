@@ -76,6 +76,10 @@ Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such 
 
 ## Version History
 
+**3.8.0**  
+• Fix animation of color variables.  
+⠀
+
 **3.7.0**  
 • Removed `Border` animations temporarily.  
 ⠀
