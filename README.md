@@ -1,3 +1,5 @@
+> ⚠️ Magic Move is no longer supported, you should move to [Switch](https://packages.framer.com/package/tishogeorgiev/switch). It's really good.
+
 # Design interactive animated components. No code.
 
 Magic Move 3 uses the power of Framer's [animation library](https://www.framer.com/api/animation/) to smoothly transition between variants of your design components using user-triggered events and powerful timing controls.
@@ -7,11 +9,7 @@ Magic Move 3 uses the power of Framer's [animation library](https://www.framer.c
 🚴‍ Connect multiple instances to a single event to cycle or toggle between states.  
 🤸‍ Three types of looping allow you to create fluid continuous animations, like spinners.  
 👯‍ Set staggerred delays to children to simulate natural movement.  
-⠀
-
----
-
-⠀
+ ⠀
 
 ## Quick Start
 
@@ -26,7 +24,7 @@ Magic Move 3 uses the power of Framer's [animation library](https://www.framer.c
 
 Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such as Text, Stacks, and any code component) to be able to animate its position, rotation and opacity.
 
-## Events
+### Events
 
 | Event       | Description                               | Cycle |
 | ----------- | ----------------------------------------- | ----- |
@@ -36,7 +34,7 @@ Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such 
 | Hover Start | Moving the mouse over the component.      | ✅    |
 | Hover End   | Moving the mouse away from the component. | ✅    |
 
-## Animatable Properties
+### Animatable Properties
 
 | Property      | Description                                         |
 | ------------- | --------------------------------------------------- |
@@ -46,9 +44,9 @@ Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such 
 | Rotation      |                                                     |
 | Border Radius |                                                     |
 | Background    | 🌈 Animates between solid and gradient backgrounds. |
-| Shadows       | 🔦Animates any number of outer and inner shadows.   |
+| Shadows       | 🔦 Animates any number of outer and inner shadows.  |
 
-## Transition Options
+### Transition Options
 
 | Property   | Description                                                           |
 | ---------- | --------------------------------------------------------------------- |
@@ -61,7 +59,7 @@ Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such 
 | Animate    | **`Tween`** Single or continuous animation.                           |
 | Repeat     | **`Tween`** Loop, yoyo (reverse easing) or flip the animation.        |
 
-## Timing Options
+### Timing Options
 
 | Property | Description                                                      |
 | -------- | ---------------------------------------------------------------- |
