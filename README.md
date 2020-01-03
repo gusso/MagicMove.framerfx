@@ -1,11 +1,12 @@
 > ⚠️ Magic Move is no longer supported, you should move to [Switch](https://packages.framer.com/package/tishogeorgiev/switch). It's really good.
 
+⠀
+
 # Design interactive animated components. No code.
 
 Magic Move 3 uses the power of Framer's [animation library](https://www.framer.com/api/animation/) to smoothly transition between variants of your design components using user-triggered events and powerful timing controls.
 
-## What's New on 3.0
-
+**What's New on 3.0**  
 🚴‍ Connect multiple instances to a single event to cycle or toggle between states.  
 🤸‍ Three types of looping allow you to create fluid continuous animations, like spinners.  
 👯‍ Set staggerred delays to children to simulate natural movement.  
@@ -68,11 +69,11 @@ Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such 
 
 ⠀
 
----
-
-⠀
-
 ## Version History
+
+**3.9.0**  
+• Deprecation notice. See you next time 👋  
+⠀
 
 **3.8.0**  
 • Fix animation of color variables.  
@@ -110,6 +111,7 @@ Animation is restricted to **`Frames`**. You can wrap anything in a Frame (such 
 ⠀
 
 **1.0.0**  
-• Initial release.
+• Initial release.  
+⠀
 
-### 💬 Feedback and support on Twitter → [@gusso](https://twitter.com/gusso)
+### [Say hi on Twitter 👋](https://twitter.com/gusso)
