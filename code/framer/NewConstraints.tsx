@@ -7,7 +7,7 @@ import {
   valueToDimensionType,
   ConstraintValues,
 } from './Constraints'
-import { isFiniteNumber } from './utils'
+import { isFiniteNumber } from '../utils'
 
 // Constraint system that can switch between DOM and Constraint layout
 

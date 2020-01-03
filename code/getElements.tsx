@@ -1,5 +1,5 @@
 import { isFrame } from './utils'
-import { calculateSize } from './NewConstraints'
+import { calculateSize } from './framer/NewConstraints'
 
 export const getElements = (sources, setElements) => {
   const elements = {}

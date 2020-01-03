@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Size, Rect, Animatable } from 'framer'
-import { isFiniteNumber } from './utils'
+import { isFiniteNumber } from '../utils'
 import { WithFractionOfFreeSpace } from '../traits/FreeSpace'
 
 export interface DefaultProps {

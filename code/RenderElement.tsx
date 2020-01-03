@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useCycle } from 'framer'
 import { isFrame } from './utils'
 import { get } from './processValues'
-import { calculateRect } from './NewConstraints'
+import { calculateRect } from './framer/NewConstraints'
 
 let i = 0
 
